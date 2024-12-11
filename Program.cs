@@ -35,16 +35,16 @@ class Program
         var createTablesSql =
             @"
                 CREATE TABLE IF NOT EXISTS users (
-                    user_id UUID PRIMARY KEY,
+                    id UUID PRIMARY KEY,
+                    balance DECIMAL,
                     name TEXT,
                     password TEXT
                 );
 
                 CREATE TABLE IF NOT EXISTS transaction (
-                    transaction_id UUID PRIMARY KEY,
-                    user_id UUID REFERENCES users(user_id),
+                    id UUID PRIMARY KEY,
+                    user_id UUID REFERENCES users(id),
                     type TEXT,
-                    description TEXT,
                     creation_Date Date
                 );";
 

@@ -23,11 +23,12 @@ namespace EgenInlämning.Menus
                 """
                   Welcome to the best finance app in the world of warcraft
                   --------------------------------------------------------
-                [1] Deposit
-                [2] Withdraw
+                [1] Deposit... deposit amount
+                [2] Withdraw.. withdraw amount
                 [3] Exit
 
                 Choose an option
+                
                 """
             );
         }

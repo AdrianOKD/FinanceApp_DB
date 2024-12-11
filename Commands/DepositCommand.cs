@@ -5,7 +5,7 @@ namespace EgenInlämning.Commands
 {
     public class DepositCommand : Command
     {
-        public DepositCommand( IUserService userService, IMenuService menuService, ITransactionService transactionService) : base("deposte", "Deposit into account", userService, menuService, transactionService)
+        public DepositCommand( IUserService userService, IMenuService menuService, ITransactionService transactionService) : base("deposit", "Deposit into account", userService, menuService, transactionService)
         {
         }
 

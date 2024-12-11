@@ -34,7 +34,7 @@ namespace EgenInlämning.Transactions
             };
 
             var sql =
-                @"INSERT INTO posts (transaction_id, user_id,  type, date, description ) VALUES (
+                @"INSERT INTO transaction (transaction_id, user_id,  type, date, description ) VALUES (
             @id,
             @user_id,
             @type,
@@ -43,7 +43,7 @@ namespace EgenInlämning.Transactions
         )";
             using var cmd = new NpgsqlCommand(sql, this.connection);
             cmd.Parameters.AddWithValue("@id", transaction.Id);
-            //cmd.Parameters.AddWithValue("@user_id", User.User.Id);
+            cmd.Parameters.AddWithValue("@user_id", user.Id);
             cmd.Parameters.AddWithValue("@content", transaction.Type);
             cmd.Parameters.AddWithValue("@created_date", transaction.Date);
             //cmd.Parameters.AddWithValue("@created_date", transaction.Description);
