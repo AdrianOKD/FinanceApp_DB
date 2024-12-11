@@ -12,7 +12,10 @@ namespace EgenInlämning.Menus
             ITransactionService transactionService
         )
         {
+            AddCommand(new WithdrawCommand(userService, menuService, transactionService ));
             AddCommand(new DepositCommand(userService, menuService, transactionService));
+            AddCommand(new RemoveTransactionCommand(userService, menuService, transactionService));
+           
         }
         public override void Display()
         {
@@ -20,8 +23,8 @@ namespace EgenInlämning.Menus
                 """
                   Welcome to the best finance app in the world of warcraft
                   --------------------------------------------------------
-                [1] Log in
-                [2] Create Account
+                [1] Deposit
+                [2] Withdraw
                 [3] Exit
 
                 Choose an option
