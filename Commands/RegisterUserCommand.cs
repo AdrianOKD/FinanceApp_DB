@@ -26,6 +26,7 @@ namespace EgenInlämning.Commands
             User user = userService.RegisterUser(username, password);
 
             Console.WriteLine($"Created user '{user.Name}'");
+            menuService.SetMenu(new MainMenu(userService, menuService, transactionService));
         }
     }
 }

@@ -5,23 +5,11 @@ using EgenInlämning.Commands;
 using System;
 using Npgsql;
 
-// users:
-// - user_id (PRIMARY KEY)
-// - name
-// - password
 
-// posts: (inlägg eller kommentar)
-// - post_id (PRIMARY KEY)
-// - user_id (FOREIGN KEY -> users)
-// - parent_post_id NULLABLE (FOREIGN KEY -> posts)
-// - content
-// - creation timestamp
-
-// user_likes:
-// - user_id (FOREIGN KEY -> users)
-// - post_id (FOREIGN KEY -> posts)
-
-
+// user_account
+// savings account : user_account
+// expendature : user_account 
+// potentiellt att användendaren kan skapa olika konton alltså namnge konton, dom innehåller samma
 
 class Program
 {
@@ -44,8 +32,9 @@ class Program
                 CREATE TABLE IF NOT EXISTS transaction (
                     id UUID PRIMARY KEY,
                     user_id UUID REFERENCES users(id),
+                    amount DECIMAL ,
                     type TEXT,
-                    creation_Date Date
+                    creation_date TIMESTAMP WITH TIME ZONE
                 );";
 
         using var createTableCmd = new NpgsqlCommand(createTablesSql, connection);
@@ -56,6 +45,7 @@ class Program
         IMenuService menuService = new SimpleMenuService();
         Menu initialMenu = new LoginMenu(userService, menuService, transactionService);
         menuService.SetMenu(initialMenu);
+        
 
         MainMenu mainMenu = new MainMenu(userService, menuService, transactionService);
         while (true)

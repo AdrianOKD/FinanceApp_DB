@@ -1,3 +1,4 @@
+using System.Runtime;
 using EgenInlämning.Menus;
 using EgenInlämning.Transactions;
 
@@ -11,11 +12,13 @@ namespace EgenInlämning.Commands
 
         public override void Execute(string[] args)
         {
-               string type = args[0];
-           double amount = Convert.ToDouble(args[1]);
 
-           Transaction transaction = transactionService.CreateTransaction(amount, type);
+            string type = args[0];
+            double amount = -Convert.ToDouble(args[1]);
 
+            Transaction transaction = transactionService.CreateTransaction(amount, type);
+
+        System.Console.WriteLine($"You withdrew {amount}");
 
         }
     }

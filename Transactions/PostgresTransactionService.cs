@@ -34,18 +34,17 @@ namespace EgenInlämning.Transactions
             };
 
             var sql =
-                @"INSERT INTO transaction (transaction_id, user_id,  type, date, description ) VALUES (
+                @"INSERT INTO transaction (id, user_id, type, creation_date) VALUES (
             @id,
             @user_id,
             @type,
-            @created_date
-            @description
+            @creation_date
         )";
             using var cmd = new NpgsqlCommand(sql, this.connection);
             cmd.Parameters.AddWithValue("@id", transaction.Id);
             cmd.Parameters.AddWithValue("@user_id", user.Id);
-            cmd.Parameters.AddWithValue("@content", transaction.Type);
-            cmd.Parameters.AddWithValue("@created_date", transaction.Date);
+            cmd.Parameters.AddWithValue("@type", transaction.Type);
+            cmd.Parameters.AddWithValue("@creation_date", transaction.Date);
             //cmd.Parameters.AddWithValue("@created_date", transaction.Description);
 
             cmd.ExecuteNonQuery();
