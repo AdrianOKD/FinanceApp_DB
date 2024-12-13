@@ -24,7 +24,7 @@ class Program
             @"
                 CREATE TABLE IF NOT EXISTS users (
                     id UUID PRIMARY KEY,
-                    balance DECIMAL,
+                    balance DECIMAL(10,2) NOT NULL DEFAULT 0.00,
                     name TEXT,
                     password TEXT
                 );

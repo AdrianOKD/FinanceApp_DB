@@ -74,6 +74,7 @@ public class PostgresUserService : IUserService
             Id = Guid.NewGuid(),
             Name = username,
             Password = password,
+            Balance = 0.00
         };
 
         var sql =
@@ -86,6 +87,7 @@ public class PostgresUserService : IUserService
         cmd.Parameters.AddWithValue("@id", user.Id);
         cmd.Parameters.AddWithValue("@name", user.Name);
         cmd.Parameters.AddWithValue("@password", user.Password);
+        cmd.Parameters.AddWithValue("@balance", user.Balance);
 
         cmd.ExecuteNonQuery();
 
