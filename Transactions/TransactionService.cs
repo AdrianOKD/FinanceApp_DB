@@ -6,5 +6,6 @@ namespace EgenInlämning.Transactions
             double amount,
             string type
         );
+       public void UpdateUserBalance (Guid userId, double amount);
     }
 }

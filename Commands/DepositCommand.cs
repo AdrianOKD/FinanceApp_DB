@@ -1,5 +1,7 @@
 using EgenInlämning.Menus;
 using EgenInlämning.Transactions;
+using EgenInlämning.Menus;
+using EgenInlämning;
 
 namespace EgenInlämning.Commands
 {
@@ -16,7 +18,9 @@ namespace EgenInlämning.Commands
 
            Transaction transaction = transactionService.CreateTransaction(amount, type);
 
-           System.Console.WriteLine($"You have depositet {amount}");
+             var user = userService.GetLoggedInUser();
+            Console.WriteLine($"Successfully deposited {amount:C}");
+            Console.WriteLine($"New balance: {user.Balance:C}");
 
 
         }

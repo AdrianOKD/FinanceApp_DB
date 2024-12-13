@@ -51,5 +51,19 @@ namespace EgenInlämning.Transactions
 
             return transaction;
         }
+
+        public void UpdateUserBalance(Guid Id, double amount)
+        {
+            using var cmd = new NpgsqlCommand(
+            @"UPDATE users 
+              SET balance = balance + @amount 
+              WHERE id = @userId",
+            connection);
+
+        cmd.Parameters.AddWithValue("@userId", Id);
+        cmd.Parameters.AddWithValue("@amount", amount);
+
+        cmd.ExecuteNonQuery();
+        }
     }
 }
