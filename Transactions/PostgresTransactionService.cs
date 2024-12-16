@@ -85,53 +85,63 @@ namespace EgenInlämning.Transactions
 
         }
 
-        public Transaction SortByMonth()
-        {
-             var user = userService.GetLoggedInUser();
-        }
+        // public Transaction SortByMonth()
+        // {
+        //     var user = userService.GetLoggedInUser();
+        // }
 
-        public Transaction SortByWeek()
+        // public Transaction SortByWeek()
+        // {
+        //     var user = userService.GetLoggedInUser();
+
+        // }
+
+        public List<Transaction> GetTransactionsByYear(Guid userId, double year)
+
+
         {
             var user = userService.GetLoggedInUser();
-            
-        }
-
-       public IEnumerable<Transaction> GetTransactionsByYear(int userId, int year)
-      
-{
-    var sql = @"
-        SELECT *
-        FROM transactions 
-        WHERE user_id = @userId
-        AND EXTRACT(YEAR FROM creation_date) = @year
-        ORDER BY creation_date DESC";
-
-    using (var cmd = new NpgsqlCommand(sql, this.connection))
-    {
-        // Add parameters
-        cmd.Parameters.AddWithValue("@userId", userId);
-        cmd.Parameters.AddWithValue("@year", year);
-
-        // Execute and return results
-        using (var reader = cmd.ExecuteReader())
-        {
-            var transactions = new List<Transaction>();
-            
-            while (reader.Read())
+            if (user == null)
             {
-                transactions.Add(new Transaction
-                {
-                    Id = reader.GetGuid(reader.GetOrdinal("id")),
-                    User_Id = reader.GetInt32(reader.GetOrdinal("user_id")),
-                    Type = reader.GetString(reader.GetOrdinal("type")),
-                    Amount = reader.GetDecimal(reader.GetOrdinal("amount")),
-                    Date = reader.GetDateTime(reader.GetOrdinal("creation_date")),
-                    Description = reader.GetString(reader.GetOrdinal("description"))
-                });
+                throw new ArgumentException("You are not logged in.");
             }
-            
-            return transactions;
+
+            var sql = @"
+        SELECT t.id AS transaction_id, t.amount, t.type, t.creation_date
+        FROM transaction t
+        INNER JOIN users u ON user_id = u.id
+        WHERE u.id = @user_Id
+        AND EXTRACT(YEAR FROM creation_date) = @year
+        ORDER BY t.creation_date DESC";
+
+            using (var cmd = new NpgsqlCommand(sql, this.connection))
+            {
+                // Add parameters
+                cmd.Parameters.AddWithValue("@user_Id", user.Id);
+                cmd.Parameters.AddWithValue("@year", year);
+
+                // Execute and return results
+                using (var reader = cmd.ExecuteReader())
+                {
+                    var transactions = new List<Transaction>();
+
+                    while (reader.Read())
+                    {
+                        transactions.Add(new Transaction
+                        {
+                            Id = reader.GetGuid(reader.GetOrdinal("transaction_id")),
+                            Amount = reader.IsDBNull(reader.GetOrdinal("amount")) ? 0.00 : reader.GetDouble(reader.GetOrdinal("amount")),
+                            Type = reader.GetString(reader.GetOrdinal("type")),
+                            Date = reader.GetDateTime(reader.GetOrdinal("creation_date"))
+                        });
+                    }
+
+                    return transactions;
+                }
+            }
         }
+
+
     }
 }
-}
+

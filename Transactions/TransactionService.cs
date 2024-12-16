@@ -8,8 +8,8 @@ namespace EgenInlämning.Transactions
             string type
         );
 
-        Transaction GetTransactionsByYear();
-        Transaction SortByMonth();
-        Transaction SortByWeek();
+        List<Transaction> GetTransactionsByYear(Guid user_Id, double year);
+        // Transaction SortByMonth();
+        // Transaction SortByWeek();
     }
 }
