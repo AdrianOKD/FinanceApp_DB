@@ -9,13 +9,14 @@ namespace EgenInlämning.Commands
 {
     public class ShowBalanceCommand : Command
     {
-        public ShowBalanceCommand(string name, string description, IUserService userService, IMenuService menuService, ITransactionService transactionService) : base(name, description, userService, menuService, transactionService)
+        public ShowBalanceCommand( IUserService userService, IMenuService menuService, ITransactionService transactionService) : base("check-balance", "Check balance", userService, menuService, transactionService)
         {
         }
 
         public override void Execute(string[] args)
         {
-            throw new NotImplementedException();
+           
+
         }
     }
 }

@@ -1,5 +1,4 @@
-using System.Data.Common;
-using System.Transactions;
+
 using Npgsql;
 //using EgenInlämning.User;
 
@@ -86,10 +85,53 @@ namespace EgenInlämning.Transactions
 
         }
 
+        public Transaction SortByMonth()
+        {
+             var user = userService.GetLoggedInUser();
+        }
 
+        public Transaction SortByWeek()
+        {
+            var user = userService.GetLoggedInUser();
+            
+        }
 
+       public IEnumerable<Transaction> GetTransactionsByYear(int userId, int year)
+      
+{
+    var sql = @"
+        SELECT *
+        FROM transactions 
+        WHERE user_id = @userId
+        AND EXTRACT(YEAR FROM creation_date) = @year
+        ORDER BY creation_date DESC";
 
+    using (var cmd = new NpgsqlCommand(sql, this.connection))
+    {
+        // Add parameters
+        cmd.Parameters.AddWithValue("@userId", userId);
+        cmd.Parameters.AddWithValue("@year", year);
 
-
+        // Execute and return results
+        using (var reader = cmd.ExecuteReader())
+        {
+            var transactions = new List<Transaction>();
+            
+            while (reader.Read())
+            {
+                transactions.Add(new Transaction
+                {
+                    Id = reader.GetGuid(reader.GetOrdinal("id")),
+                    User_Id = reader.GetInt32(reader.GetOrdinal("user_id")),
+                    Type = reader.GetString(reader.GetOrdinal("type")),
+                    Amount = reader.GetDecimal(reader.GetOrdinal("amount")),
+                    Date = reader.GetDateTime(reader.GetOrdinal("creation_date")),
+                    Description = reader.GetString(reader.GetOrdinal("description"))
+                });
+            }
+            
+            return transactions;
+        }
     }
+}
 }

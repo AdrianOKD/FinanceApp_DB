@@ -7,5 +7,9 @@ namespace EgenInlämning.Transactions
             double amount,
             string type
         );
+
+        Transaction GetTransactionsByYear();
+        Transaction SortByMonth();
+        Transaction SortByWeek();
     }
 }

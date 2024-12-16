@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace EgenInlämning.Commands
 {
-    public class SortByYearCommand
+    public class GetTransactionsByYearCommand
     {
         
     }

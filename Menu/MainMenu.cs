@@ -15,6 +15,7 @@ namespace EgenInlämning.Menus
             AddCommand(new WithdrawCommand(userService, menuService, transactionService ));
             AddCommand(new DepositCommand(userService, menuService, transactionService));
             AddCommand(new RemoveTransactionCommand(userService, menuService, transactionService));
+            AddCommand(new ShowBalanceCommand(userService,menuService,transactionService));
            
         }
         public override void Display()
