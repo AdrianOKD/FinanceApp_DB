@@ -55,7 +55,6 @@ namespace EgenInlämning.Transactions
                 cmd.ExecuteNonQuery();
             }
 
-
             var updateBalanceSql =
            @"UPDATE users 
               SET balance = balance + @amount 
@@ -82,7 +81,6 @@ namespace EgenInlämning.Transactions
 
             }
 
-
         }
         public void CheckBalanceCmd()
         {
@@ -102,11 +100,7 @@ namespace EgenInlämning.Transactions
 
         }
 
-
-
-
         public List<Transaction> GetTransactionsByYear(Guid userId, double year)
-
 
         {
             var user = userService.GetLoggedInUser();

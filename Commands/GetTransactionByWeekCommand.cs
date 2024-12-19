@@ -7,9 +7,9 @@ using EgenInlämning.Transactions;
 
 namespace EgenInlämning.Commands
 {
-    public class SortByDayCommand : Command
+    public class GetTransactionsByWeekCommand : Command
     {
-        public SortByDayCommand(string name, string description, IUserService userService, IMenuService menuService, ITransactionService transactionService) : base(name, description, userService, menuService, transactionService)
+        public GetTransactionsByWeekCommand(string name, string description, IUserService userService, IMenuService menuService, ITransactionService transactionService) : base(name, description, userService, menuService, transactionService)
         {
         }
 
