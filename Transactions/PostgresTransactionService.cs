@@ -51,7 +51,6 @@ namespace EgenInlämning.Transactions
                 cmd.Parameters.AddWithValue("@type", transaction.Type);
                 cmd.Parameters.AddWithValue("@amount", amount);
                 cmd.Parameters.AddWithValue("@creation_date", transaction.Date);
-                //cmd.Parameters.AddWithValue("@created_date", transaction.Description);
 
                 cmd.ExecuteNonQuery();
             }
@@ -85,7 +84,7 @@ namespace EgenInlämning.Transactions
 
 
         }
-        public  void CheckBalanceCmd()
+        public void CheckBalanceCmd()
         {
             var user = userService.GetLoggedInUser();
             if (user == null)
@@ -104,16 +103,7 @@ namespace EgenInlämning.Transactions
         }
 
 
-        // public Transaction SortByMonth()
-        // {
-        //     var user = userService.GetLoggedInUser();
-        // }
 
-        // public Transaction SortByWeek()
-        // {
-        //     var user = userService.GetLoggedInUser();
-
-        // }
 
         public List<Transaction> GetTransactionsByYear(Guid userId, double year)
 
@@ -135,11 +125,9 @@ namespace EgenInlämning.Transactions
 
             using (var cmd = new NpgsqlCommand(sql, this.connection))
             {
-                // Add parameters
                 cmd.Parameters.AddWithValue("@user_Id", user.Id);
                 cmd.Parameters.AddWithValue("@year", year);
 
-                // Execute and return results
                 using (var reader = cmd.ExecuteReader())
                 {
                     var transactions = new List<Transaction>();
@@ -159,7 +147,6 @@ namespace EgenInlämning.Transactions
                 }
             }
         }
-
 
     }
 }

@@ -14,22 +14,22 @@ namespace EgenInlämning.Commands
         public override void Execute(string[] args)
         {
 
-             var currentUser = userService.GetLoggedInUser();
-        if (currentUser == null)
-        {
-            Console.WriteLine("You must be logged in to make a deposit");
-            return;
-        }
+            var currentUser = userService.GetLoggedInUser();
+            if (currentUser == null)
+            {
+                Console.WriteLine("You must be logged in to make a deposit");
+                return;
+            }
 
             string type = args[0];
             double amount = -Convert.ToDouble(args[1]);
 
-            Transaction transaction = transactionService.CreateTransaction( user_Id : currentUser.Id,
+            Transaction transaction = transactionService.CreateTransaction(user_Id: currentUser.Id,
                 amount: amount,
                 type: "withdraw");
 
 
-        System.Console.WriteLine($"You withdrew {amount}");
+            System.Console.WriteLine($"You withdrew {amount}");
 
         }
     }
