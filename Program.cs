@@ -45,7 +45,7 @@ class Program
         IMenuService menuService = new SimpleMenuService();
         Menu initialMenu = new LoginMenu(userService, menuService, transactionService);
         menuService.SetMenu(initialMenu);
-        
+
 
         MainMenu mainMenu = new MainMenu(userService, menuService, transactionService);
         while (true)

@@ -19,6 +19,7 @@ namespace EgenInlämning.Commands
             Console.WriteLine("You must be logged in to make a deposit");
             return;
         }
+        //add function for 
            string type = args[0];
            double amount = Convert.ToDouble(args[1]);
 

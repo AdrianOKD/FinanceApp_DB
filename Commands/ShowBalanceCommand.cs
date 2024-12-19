@@ -14,9 +14,15 @@ namespace EgenInlämning.Commands
         }
 
         public override void Execute(string[] args)
-        {
-           
+        {   
 
+          
+
+         
+           transactionService.CheckBalanceCmd();
+
+
+             
         }
     }
 }

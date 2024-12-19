@@ -1,6 +1,7 @@
 
 using Npgsql;
 //using EgenInlämning.User;
+//När jag vill deleta, ta in transaktionerna i en lista, gå sedan igenom listan och sätt ett index på den kopplat till id, för att genom den deleta transaktionen
 
 namespace EgenInlämning.Transactions
 {
@@ -9,7 +10,7 @@ namespace EgenInlämning.Transactions
         private IUserService userService;
         private NpgsqlConnection connection;
 
-        public PostgresTransactionService(IUserService userService, NpgsqlConnection connection)
+        public PostgresTransactionService(IUserService userService, Menus.IMenuService menuService, NpgsqlConnection connection)
         {
             this.userService = userService;
             this.connection = connection;
@@ -84,6 +85,24 @@ namespace EgenInlämning.Transactions
 
 
         }
+        public  void CheckBalanceCmd()
+        {
+            var user = userService.GetLoggedInUser();
+            if (user == null)
+            {
+                throw new ArgumentException("You are not logged in.");
+            }
+
+            var checkBalanceSql = "SELECT balance FROM users WHERE id = @user_Id";
+            using (var checkBalanceCmd = new NpgsqlCommand(checkBalanceSql, connection))
+            {
+                checkBalanceCmd.Parameters.AddWithValue("@user_Id", user.Id);
+                var newBalance = (decimal)checkBalanceCmd.ExecuteScalar();
+                Console.WriteLine($"Balance for user ID {user.Id}: {newBalance}");
+            }
+
+        }
+
 
         // public Transaction SortByMonth()
         // {

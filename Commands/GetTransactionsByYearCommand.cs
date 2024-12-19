@@ -30,6 +30,7 @@ namespace EgenInlämning.Commands
             
 
              double year = Convert.ToDouble(args[1]);
+             // Add function for choosing type of transaction to sum or show for specifc year.
             // if (args.Length > 0 || !int.TryParse(args[0], out year))
             // {
             //     year = DateTime.Now.Year;

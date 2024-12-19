@@ -9,6 +9,7 @@ namespace EgenInlämning.Transactions
         );
 
         List<Transaction> GetTransactionsByYear(Guid user_Id, double year);
+        void CheckBalanceCmd();
         // Transaction SortByMonth();
         // Transaction SortByWeek();
     }
