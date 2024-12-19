@@ -41,8 +41,8 @@ class Program
         createTableCmd.ExecuteNonQuery();
 
         IUserService userService = new PostgresUserService(connection);
-        ITransactionService transactionService = new PostgresTransactionService(userService, connection);
         IMenuService menuService = new SimpleMenuService();
+        ITransactionService transactionService = new PostgresTransactionService(userService, connection);
         Menu initialMenu = new LoginMenu(userService, menuService, transactionService);
         menuService.SetMenu(initialMenu);
 

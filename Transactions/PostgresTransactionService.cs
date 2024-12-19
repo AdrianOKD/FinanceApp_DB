@@ -10,7 +10,7 @@ namespace EgenInlämning.Transactions
         private IUserService userService;
         private NpgsqlConnection connection;
 
-        public PostgresTransactionService(IUserService userService, Menus.IMenuService menuService, NpgsqlConnection connection)
+        public PostgresTransactionService(IUserService userService, NpgsqlConnection connection)
         {
             this.userService = userService;
             this.connection = connection;
@@ -76,7 +76,7 @@ namespace EgenInlämning.Transactions
                 {
                     checkBalanceCmd.Parameters.AddWithValue("@user_Id", user.Id);
                     var newBalance = (decimal)checkBalanceCmd.ExecuteScalar();
-                    Console.WriteLine($"New balance for user ID {user.Id}: {newBalance}");
+                    Console.WriteLine($" {newBalance}");
                 }
 
                 return transaction;
