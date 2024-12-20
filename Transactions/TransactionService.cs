@@ -8,9 +8,9 @@ namespace EgenInlämning.Transactions
             string type
         );
 
-        List<Transaction> GetTransactionsByYear(Guid user_Id, double year);
+        List<Transaction> GetTransactionsByYear(Guid user_Id, int year);
         void CheckBalanceCmd();
-        // List<Transaction> GetTransactionsB
+        List<Transaction> GetTransactionsByMonth(Guid user_id, int year, int month);
         // Transaction GetTransactionByMonth();
         // Transaction GetTransactionByWeek();
     }

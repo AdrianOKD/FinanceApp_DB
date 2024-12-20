@@ -100,7 +100,7 @@ namespace EgenInlämning.Transactions
 
         }
 
-        public List<Transaction> GetTransactionsByYear(Guid userId, double year)
+        public List<Transaction> GetTransactionsByYear(Guid user_Id, int year)
 
         {
             var user = userService.GetLoggedInUser();
@@ -140,6 +140,47 @@ namespace EgenInlämning.Transactions
                     return transactions;
                 }
             }
+        }
+
+        public List<Transaction> GetTransactionsByMonth(Guid user_Id, int year , int month)
+        {
+             var user = userService.GetLoggedInUser();
+            if (user == null)
+            {
+                throw new ArgumentException("You are not logged in.");
+            }
+
+            var sql = @"
+        SELECT t.id AS transaction_id, t.amount, t.type, t.creation_date
+        FROM transaction t
+        INNER JOIN users u ON user_id = u.id
+        WHERE u.id = @user_Id
+        AND EXTRACT(YEAR FROM creation_date) = @year
+        ORDER BY t.creation_date DESC";
+
+            using (var cmd = new NpgsqlCommand(sql, this.connection))
+            {
+                cmd.Parameters.AddWithValue("@user_Id", user.Id);
+                cmd.Parameters.AddWithValue("@year", year);
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    var transactions = new List<Transaction>();
+
+                    while (reader.Read())
+                    {
+                        transactions.Add(new Transaction
+                        {
+                            Id = reader.GetGuid(reader.GetOrdinal("transaction_id")),
+                            Amount = reader.IsDBNull(reader.GetOrdinal("amount")) ? 0.00 : reader.GetDouble(reader.GetOrdinal("amount")),
+                            Type = reader.GetString(reader.GetOrdinal("type")),
+                            Date = reader.GetDateTime(reader.GetOrdinal("creation_date"))
+                        });
+                    }
+
+                    return transactions;
+                }
+
         }
 
     }
