@@ -15,7 +15,6 @@ namespace EgenInlämning.Transactions
             this.userService = userService;
             this.connection = connection;
         }
-
         public Transaction CreateTransaction(
             Guid userId,
             double amount,
@@ -27,7 +26,6 @@ namespace EgenInlämning.Transactions
             {
                 throw new ArgumentException("You are not logged in.");
             }
-
             var transaction = new Transaction
             {
                 Id = Guid.NewGuid(),
@@ -35,7 +33,6 @@ namespace EgenInlämning.Transactions
                 Type = type,
                 Date = DateTime.Now,
             };
-
             var sql =
                 @"INSERT INTO transaction (id, user_id, type, amount, creation_date) VALUES (
             @id,
@@ -76,11 +73,8 @@ namespace EgenInlämning.Transactions
                     var newBalance = (decimal)checkBalanceCmd.ExecuteScalar();
                     Console.WriteLine($" {newBalance}");
                 }
-
                 return transaction;
-
             }
-
         }
         public void CheckBalanceCmd()
         {
@@ -89,7 +83,6 @@ namespace EgenInlämning.Transactions
             {
                 throw new ArgumentException("You are not logged in.");
             }
-
             var checkBalanceSql = "SELECT balance FROM users WHERE id = @user_Id";
             using (var checkBalanceCmd = new NpgsqlCommand(checkBalanceSql, connection))
             {
@@ -97,11 +90,9 @@ namespace EgenInlämning.Transactions
                 var newBalance = (decimal)checkBalanceCmd.ExecuteScalar();
                 Console.WriteLine($"Balance for user ID {user.Id}: {newBalance}");
             }
-
         }
 
         public List<Transaction> GetTransactionsByYear(Guid user_Id, int year)
-
         {
             var user = userService.GetLoggedInUser();
             if (user == null)
@@ -121,11 +112,9 @@ namespace EgenInlämning.Transactions
             {
                 cmd.Parameters.AddWithValue("@user_Id", user.Id);
                 cmd.Parameters.AddWithValue("@year", year);
-
                 using (var reader = cmd.ExecuteReader())
                 {
                     var transactions = new List<Transaction>();
-
                     while (reader.Read())
                     {
                         transactions.Add(new Transaction
@@ -136,12 +125,10 @@ namespace EgenInlämning.Transactions
                             Date = reader.GetDateTime(reader.GetOrdinal("creation_date"))
                         });
                     }
-
                     return transactions;
                 }
             }
         }
-
         public List<Transaction> GetTransactionsByMonth(Guid user_Id, int year, int month)
         {
             var user = userService.GetLoggedInUser();
@@ -149,7 +136,6 @@ namespace EgenInlämning.Transactions
             {
                 throw new ArgumentException("You are not logged in.");
             }
-
             var sql = @"
         SELECT t.id AS transaction_id, t.amount, t.type, t.creation_date
         FROM transaction t
@@ -164,11 +150,9 @@ namespace EgenInlämning.Transactions
                 cmd.Parameters.AddWithValue("@user_Id", user.Id);
                 cmd.Parameters.AddWithValue("@year", year);
                 cmd.Parameters.AddWithValue("@month", month);
-
                 using (var reader = cmd.ExecuteReader())
                 {
                     var transactions = new List<Transaction>();
-
                     while (reader.Read())
                     {
                         transactions.Add(new Transaction
@@ -179,12 +163,9 @@ namespace EgenInlämning.Transactions
                             Date = reader.GetDateTime(reader.GetOrdinal("creation_date"))
                         });
                     }
-
                     return transactions;
                 }
-
             }
-
         }
     }
 }

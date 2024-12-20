@@ -22,8 +22,6 @@ namespace EgenInlämning.Menus
         }
     }
 
-    // Startmeny som bara används i första början.
-    // Den skall bytas ut mot en "riktig" menu direkt, som LoginMenu exempelvis.
     class EmptyMenu : Menu
     {
         public override void Display() { }

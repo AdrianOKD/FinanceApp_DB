@@ -28,6 +28,10 @@ namespace EgenInlämning.Menus
                   --------------------------------------------------------
                 [1] Deposit... deposit amount
                 [2] Withdraw.. withdraw amount
+                [3] Sort by year
+                [4] Sort by month
+                [5] Sort by week
+                [6] Sort by year
                 [3] Exit
 
                 Choose an option
