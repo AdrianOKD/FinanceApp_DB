@@ -142,9 +142,9 @@ namespace EgenInlämning.Transactions
             }
         }
 
-        public List<Transaction> GetTransactionsByMonth(Guid user_Id, int year , int month)
+        public List<Transaction> GetTransactionsByMonth(Guid user_Id, int year, int month)
         {
-             var user = userService.GetLoggedInUser();
+            var user = userService.GetLoggedInUser();
             if (user == null)
             {
                 throw new ArgumentException("You are not logged in.");
@@ -156,12 +156,14 @@ namespace EgenInlämning.Transactions
         INNER JOIN users u ON user_id = u.id
         WHERE u.id = @user_Id
         AND EXTRACT(YEAR FROM creation_date) = @year
+        AND EXTRACT(MONTH FROM creation_date) = @month
         ORDER BY t.creation_date DESC";
 
             using (var cmd = new NpgsqlCommand(sql, this.connection))
             {
                 cmd.Parameters.AddWithValue("@user_Id", user.Id);
                 cmd.Parameters.AddWithValue("@year", year);
+                cmd.Parameters.AddWithValue("@month", month);
 
                 using (var reader = cmd.ExecuteReader())
                 {
@@ -181,8 +183,9 @@ namespace EgenInlämning.Transactions
                     return transactions;
                 }
 
-        }
+            }
 
+        }
     }
 }
 

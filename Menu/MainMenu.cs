@@ -17,6 +17,7 @@ namespace EgenInlämning.Menus
             AddCommand(new RemoveTransactionCommand(userService, menuService, transactionService));
             AddCommand(new ShowBalanceCommand(userService,menuService,transactionService));
             AddCommand(new GetTransactionsByYearCommand(userService, menuService, transactionService));
+            AddCommand(new GetTransactionsByMonthCommand(userService, menuService, transactionService));
            
         }
         public override void Display()

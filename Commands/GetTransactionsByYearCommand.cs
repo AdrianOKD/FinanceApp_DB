@@ -26,20 +26,9 @@ namespace EgenInlämning.Commands
                 return;
             }
 
-           
-            
-
              int year = Convert.ToInt32(args[1]);
-             // Add function for choosing type of transaction to sum or show for specifc year.
-            // if (args.Length > 0 || !int.TryParse(args[0], out year))
-            // {
-            //     year = DateTime.Now.Year;
-            //     Console.WriteLine($"No year specified. Showing transactions for {year}");
-            // }
-            
 
             List<Transaction> transactions = transactionService.GetTransactionsByYear(currentUser.Id, year);
-           
 
             if (!transactions.Any())
             {
