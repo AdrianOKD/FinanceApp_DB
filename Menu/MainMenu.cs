@@ -12,14 +12,16 @@ namespace EgenInlämning.Menus
             ITransactionService transactionService
         )
         {
+            // csharpier-ignore-start
             AddCommand(new WithdrawCommand(userService, menuService, transactionService ));
             AddCommand(new DepositCommand(userService, menuService, transactionService));
             AddCommand(new RemoveTransactionCommand(userService, menuService, transactionService));
             AddCommand(new ShowBalanceCommand(userService,menuService,transactionService));
             AddCommand(new GetTransactionsByYearCommand(userService, menuService, transactionService));
             AddCommand(new GetTransactionsByMonthCommand(userService, menuService, transactionService));
-           
+            //csharp-ignore-end
         }
+
         public override void Display()
         {
             Console.Write(
@@ -35,7 +37,7 @@ namespace EgenInlämning.Menus
                 [3] Exit
 
                 Choose an option
-                
+
                 """
             );
         }

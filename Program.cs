@@ -1,13 +1,13 @@
 ﻿namespace EgenInlämning;
-using EgenInlämning.Transactions;
-using EgenInlämning.Menus;
-using System;
-using Npgsql;
 
+using System;
+using EgenInlämning.Menus;
+using EgenInlämning.Transactions;
+using Npgsql;
 
 // user_account
 // savings account : user_account
-// expendature : user_account 
+// expendature : user_account
 // potentiellt att användendaren kan skapa olika konton alltså namnge konton, dom innehåller samma
 
 class Program
@@ -15,7 +15,7 @@ class Program
     public static void Main(string[] args)
     {
         string connectionString =
-          "Host=localhost;Username=postgres;Password=password;Database=financedatabase";
+            "Host=localhost;Username=postgres;Password=password;Database=financedatabase";
         using var connection = new NpgsqlConnection(connectionString);
         connection.Open();
 
@@ -41,10 +41,12 @@ class Program
 
         IUserService userService = new PostgresUserService(connection);
         IMenuService menuService = new SimpleMenuService();
-        ITransactionService transactionService = new PostgresTransactionService(userService, connection);
+        ITransactionService transactionService = new PostgresTransactionService(
+            userService,
+            connection
+        );
         Menu initialMenu = new LoginMenu(userService, menuService, transactionService);
         menuService.SetMenu(initialMenu);
-
 
         MainMenu mainMenu = new MainMenu(userService, menuService, transactionService);
         while (true)

@@ -9,9 +9,18 @@ namespace EgenInlämning.Commands
 {
     public class GetTransactionsByMonthCommand : Command
     {
-        public GetTransactionsByMonthCommand(IUserService userService, IMenuService menuService, ITransactionService transactionService) : base("sort-month", "Sort transactions by year and month", userService, menuService, transactionService)
-        {
-        }
+        public GetTransactionsByMonthCommand(
+            IUserService userService,
+            IMenuService menuService,
+            ITransactionService transactionService
+        )
+            : base(
+                "sort-month",
+                "Sort transactions by year and month",
+                userService,
+                menuService,
+                transactionService
+            ) { }
 
         public override void Execute(string[] args)
         {
@@ -25,7 +34,11 @@ namespace EgenInlämning.Commands
             int year = Convert.ToInt32(args[1]);
             int month = Convert.ToInt32(args[2]);
 
-            List<Transaction> transactions = transactionService.GetTransactionsByMonth(currentUser.Id, year, month);
+            List<Transaction> transactions = transactionService.GetTransactionsByMonth(
+                currentUser.Id,
+                year,
+                month
+            );
 
             if (!transactions.Any())
             {
@@ -39,7 +52,9 @@ namespace EgenInlämning.Commands
 
             foreach (var transaction in transactions)
             {
-                Console.WriteLine($"{transaction.Date:yyyy-MM-dd}\t{transaction.Type,-12}\t{transaction.Amount:C}");
+                Console.WriteLine(
+                    $"{transaction.Date:yyyy-MM-dd}\t{transaction.Type, -12}\t{transaction.Amount:C}"
+                );
             }
         }
     }

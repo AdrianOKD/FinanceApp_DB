@@ -12,6 +12,5 @@ namespace EgenInlämning.Transactions
         public Guid Id { get; set; }
 
         public int? Reference_id { get; set; } = null; // ska användas för att refera till när jag vill ta bort en transaktion, behåller ett tillfälligt id skapad med for loop från lista.
-
     }
 }

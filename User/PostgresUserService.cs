@@ -1,5 +1,7 @@
 namespace EgenInlämning;
+
 using Npgsql;
+
 public class PostgresUserService : IUserService
 {
     private NpgsqlConnection connection;
@@ -74,7 +76,7 @@ public class PostgresUserService : IUserService
             Id = Guid.NewGuid(),
             Name = username,
             Password = password,
-            Balance = 0.00
+            Balance = 0.00,
         };
 
         var sql =

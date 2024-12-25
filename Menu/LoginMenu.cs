@@ -14,7 +14,6 @@ namespace EgenInlämning.Menus
             AddCommand(new LoginCommand(userService, menuService, transactionService));
             AddCommand(new RegisterUserCommand(userService, menuService, transactionService));
         }
-        
 
         public override void Display()
         {

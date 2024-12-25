@@ -10,6 +10,7 @@ namespace EgenInlämning.Menus
         {
             this.commands.Add(command);
         }
+
         public void ExecuteCommand(string inputCommand)
         {
             string[] commandParts = inputCommand.Split(" ");
@@ -25,6 +26,7 @@ namespace EgenInlämning.Menus
 
             throw new ArgumentException("Command not found.");
         }
+
         public abstract void Display();
     }
 }

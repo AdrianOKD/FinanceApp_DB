@@ -16,8 +16,7 @@ namespace EgenInlämning.Commands
                 userService,
                 menuService,
                 transactionService
-            )
-        { }
+            ) { }
 
         public override void Execute(string[] args)
         {

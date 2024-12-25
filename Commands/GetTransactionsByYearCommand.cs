@@ -7,15 +7,20 @@ using EgenInlämning.Transactions;
 
 namespace EgenInlämning.Commands
 {
-      public class GetTransactionsByYearCommand : Command
+    public class GetTransactionsByYearCommand : Command
     {
         public GetTransactionsByYearCommand(
-            IUserService userService, 
-            IMenuService menuService, 
-            ITransactionService transactionService) 
-            : base("Sort-Year", "Sorts transactions by year", userService, menuService, transactionService)
-        {
-        }
+            IUserService userService,
+            IMenuService menuService,
+            ITransactionService transactionService
+        )
+            : base(
+                "Sort-Year",
+                "Sorts transactions by year",
+                userService,
+                menuService,
+                transactionService
+            ) { }
 
         public override void Execute(string[] args)
         {
@@ -26,9 +31,12 @@ namespace EgenInlämning.Commands
                 return;
             }
 
-             int year = Convert.ToInt32(args[1]);
+            int year = Convert.ToInt32(args[1]);
 
-            List<Transaction> transactions = transactionService.GetTransactionsByYear(currentUser.Id, year);
+            List<Transaction> transactions = transactionService.GetTransactionsByYear(
+                currentUser.Id,
+                year
+            );
 
             if (!transactions.Any())
             {
@@ -42,7 +50,9 @@ namespace EgenInlämning.Commands
 
             foreach (var transaction in transactions)
             {
-                Console.WriteLine($"{transaction.Date:yyyy-MM-dd}\t{transaction.Type,-12}\t{transaction.Amount:C}");
+                Console.WriteLine(
+                    $"{transaction.Date:yyyy-MM-dd}\t{transaction.Type, -12}\t{transaction.Amount:C}"
+                );
             }
         }
     }

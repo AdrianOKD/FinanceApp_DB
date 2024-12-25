@@ -1,5 +1,5 @@
-
 using Npgsql;
+
 //using EgenInlämning.User;
 //När jag vill deleta, ta in transaktionerna i en lista, gå sedan igenom listan och sätt ett index på den kopplat till id, för att genom den deleta transaktionen
 
@@ -15,11 +15,8 @@ namespace EgenInlämning.Transactions
             this.userService = userService;
             this.connection = connection;
         }
-        public Transaction CreateTransaction(
-            Guid userId,
-            double amount,
-            string type
-        )
+
+        public Transaction CreateTransaction(Guid userId, double amount, string type)
         {
             var user = userService.GetLoggedInUser();
             if (user == null)
@@ -53,7 +50,7 @@ namespace EgenInlämning.Transactions
             }
 
             var updateBalanceSql =
-           @"UPDATE users 
+                @"UPDATE users 
               SET balance = balance + @amount 
               WHERE id = @user_Id";
 
@@ -76,6 +73,7 @@ namespace EgenInlämning.Transactions
                 return transaction;
             }
         }
+
         public void CheckBalanceCmd()
         {
             var user = userService.GetLoggedInUser();
@@ -100,7 +98,8 @@ namespace EgenInlämning.Transactions
                 throw new ArgumentException("You are not logged in.");
             }
 
-            var sql = @"
+            var sql =
+                @"
         SELECT t.id AS transaction_id, t.amount, t.type, t.creation_date
         FROM transaction t
         INNER JOIN users u ON user_id = u.id
@@ -117,18 +116,23 @@ namespace EgenInlämning.Transactions
                     var transactions = new List<Transaction>();
                     while (reader.Read())
                     {
-                        transactions.Add(new Transaction
-                        {
-                            Id = reader.GetGuid(reader.GetOrdinal("transaction_id")),
-                            Amount = reader.IsDBNull(reader.GetOrdinal("amount")) ? 0.00 : reader.GetDouble(reader.GetOrdinal("amount")),
-                            Type = reader.GetString(reader.GetOrdinal("type")),
-                            Date = reader.GetDateTime(reader.GetOrdinal("creation_date"))
-                        });
+                        transactions.Add(
+                            new Transaction
+                            {
+                                Id = reader.GetGuid(reader.GetOrdinal("transaction_id")),
+                                Amount = reader.IsDBNull(reader.GetOrdinal("amount"))
+                                    ? 0.00
+                                    : reader.GetDouble(reader.GetOrdinal("amount")),
+                                Type = reader.GetString(reader.GetOrdinal("type")),
+                                Date = reader.GetDateTime(reader.GetOrdinal("creation_date")),
+                            }
+                        );
                     }
                     return transactions;
                 }
             }
         }
+
         public List<Transaction> GetTransactionsByMonth(Guid user_Id, int year, int month)
         {
             var user = userService.GetLoggedInUser();
@@ -136,7 +140,8 @@ namespace EgenInlämning.Transactions
             {
                 throw new ArgumentException("You are not logged in.");
             }
-            var sql = @"
+            var sql =
+                @"
         SELECT t.id AS transaction_id, t.amount, t.type, t.creation_date
         FROM transaction t
         INNER JOIN users u ON user_id = u.id
@@ -155,13 +160,17 @@ namespace EgenInlämning.Transactions
                     var transactions = new List<Transaction>();
                     while (reader.Read())
                     {
-                        transactions.Add(new Transaction
-                        {
-                            Id = reader.GetGuid(reader.GetOrdinal("transaction_id")),
-                            Amount = reader.IsDBNull(reader.GetOrdinal("amount")) ? 0.00 : reader.GetDouble(reader.GetOrdinal("amount")),
-                            Type = reader.GetString(reader.GetOrdinal("type")),
-                            Date = reader.GetDateTime(reader.GetOrdinal("creation_date"))
-                        });
+                        transactions.Add(
+                            new Transaction
+                            {
+                                Id = reader.GetGuid(reader.GetOrdinal("transaction_id")),
+                                Amount = reader.IsDBNull(reader.GetOrdinal("amount"))
+                                    ? 0.00
+                                    : reader.GetDouble(reader.GetOrdinal("amount")),
+                                Type = reader.GetString(reader.GetOrdinal("type")),
+                                Date = reader.GetDateTime(reader.GetOrdinal("creation_date")),
+                            }
+                        );
                     }
                     return transactions;
                 }
@@ -169,4 +178,3 @@ namespace EgenInlämning.Transactions
         }
     }
 }
-
