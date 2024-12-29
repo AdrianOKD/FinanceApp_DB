@@ -15,8 +15,8 @@ namespace EgenInlämning.Commands
             ITransactionService transactionService
         )
             : base(
-                "sort-month",
-                "Sort transactions by year and month",
+                "4",
+                "Sort transactions for certain year and month",
                 userService,
                 menuService,
                 transactionService

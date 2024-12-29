@@ -11,7 +11,7 @@ namespace EgenInlämning.Commands
             ITransactionService transactionService
         )
             : base(
-                "register-user",
+                "2",
                 "Create a new user account.",
                 userService,
                 menuService,
@@ -20,9 +20,14 @@ namespace EgenInlämning.Commands
 
         public override void Execute(string[] args)
         {
-            string username = args[1];
-            string password = args[2];
-
+           
+            System.Console.WriteLine("Enter Username");
+            string username = Console.ReadLine();
+            if(string.IsNullOrEmpty(username))
+            {System.Console.WriteLine("username cant be empty");
+            return;}
+            System.Console.WriteLine("Enter Password");
+            string password = Console.ReadLine();
             User user = userService.RegisterUser(username, password);
 
             Console.WriteLine($"Created user '{user.Name}'");

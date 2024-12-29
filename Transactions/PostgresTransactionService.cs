@@ -1,5 +1,6 @@
+using System.Data.SqlTypes;
 using Npgsql;
-
+using EgenInlämning;
 //using EgenInlämning.User;
 //När jag vill deleta, ta in transaktionerna i en lista, gå sedan igenom listan och sätt ett index på den kopplat till id, för att genom den deleta transaktionen
 
@@ -59,7 +60,7 @@ namespace EgenInlämning.Transactions
                 updatecmd.Parameters.AddWithValue("@user_Id", user.Id);
                 updatecmd.Parameters.AddWithValue("@amount", amount);
 
-                Console.WriteLine($"Updating balance for user ID: {user.Id}");
+                Console.WriteLine($"Updating balance for user: {user.Name}");
                 Console.WriteLine($"Amount to add: {amount}");
 
                 updatecmd.ExecuteNonQuery();
@@ -68,7 +69,7 @@ namespace EgenInlämning.Transactions
                 {
                     checkBalanceCmd.Parameters.AddWithValue("@user_Id", user.Id);
                     var newBalance = (decimal)checkBalanceCmd.ExecuteScalar();
-                    Console.WriteLine($" {newBalance}");
+                    Console.WriteLine($" Your new balance is: {newBalance}");
                 }
                 return transaction;
             }
@@ -98,14 +99,14 @@ namespace EgenInlämning.Transactions
                 throw new ArgumentException("You are not logged in.");
             }
 
-            var sql =
-                @"
-        SELECT t.id AS transaction_id, t.amount, t.type, t.creation_date
-        FROM transaction t
-        INNER JOIN users u ON user_id = u.id
-        WHERE u.id = @user_Id
-        AND EXTRACT(YEAR FROM creation_date) = @year
-        ORDER BY t.creation_date DESC";
+            var sql = SqlQueries.YearSql;
+        //         @"
+        // SELECT t.id AS transaction_id, t.amount, t.type, t.creation_date
+        // FROM transaction t
+        // INNER JOIN users u ON user_id = u.id
+        // WHERE u.id = @user_Id
+        // AND EXTRACT(YEAR FROM creation_date) = @year
+        // ORDER BY t.creation_date DESC";
 
             using (var cmd = new NpgsqlCommand(sql, this.connection))
             {
@@ -151,6 +152,49 @@ namespace EgenInlämning.Transactions
         ORDER BY t.creation_date DESC";
 
             using (var cmd = new NpgsqlCommand(sql, this.connection))
+            {
+                cmd.Parameters.AddWithValue("@user_Id", user.Id);
+                cmd.Parameters.AddWithValue("@year", year);
+                cmd.Parameters.AddWithValue("@month", month);
+                using (var reader = cmd.ExecuteReader())
+                {
+                    var transactions = new List<Transaction>();
+                    while (reader.Read())
+                    {
+                        transactions.Add(
+                            new Transaction
+                            {
+                                Id = reader.GetGuid(reader.GetOrdinal("transaction_id")),
+                                Amount = reader.IsDBNull(reader.GetOrdinal("amount"))
+                                    ? 0.00
+                                    : reader.GetDouble(reader.GetOrdinal("amount")),
+                                Type = reader.GetString(reader.GetOrdinal("type")),
+                                Date = reader.GetDateTime(reader.GetOrdinal("creation_date")),
+                            }
+                        );
+                    }
+                    return transactions;
+                }
+            }
+        }
+         public List<Transaction> GetTransactionsByWeek(Guid user_Id, int year, int month)
+        {
+            var user = userService.GetLoggedInUser();
+            if (user == null)
+            {
+                throw new ArgumentException("You are not logged in.");
+            }
+            var sql =
+                @"
+        SELECT t.id AS transaction_id, t.amount, t.type, t.creation_date
+        FROM transaction t
+        INNER JOIN users u ON user_id = u.id
+        WHERE u.id = @user_Id
+        AND EXTRACT(YEAR FROM creation_date) = @year
+        AND EXTRACT(MONTH FROM creation_date) = @month
+        ORDER BY t.creation_date DESC";
+
+            using (var cmd = new NpgsqlCommand(SqlMonth, this.connection))
             {
                 cmd.Parameters.AddWithValue("@user_Id", user.Id);
                 cmd.Parameters.AddWithValue("@year", year);

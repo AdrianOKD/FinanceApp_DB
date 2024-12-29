@@ -33,7 +33,7 @@ namespace EgenInlämning.Commands
                 type: "deposit"
             );
 
-            Console.WriteLine($"Successfully deposited {amount:C}");
+            Console.WriteLine($"Successfully deposited");
         }
     }
 }

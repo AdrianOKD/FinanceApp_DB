@@ -15,8 +15,8 @@ namespace EgenInlämning.Commands
             ITransactionService transactionService
         )
             : base(
-                "Sort-Year",
-                "Sorts transactions by year",
+                "3",
+                "Show transaction for certain year",
                 userService,
                 menuService,
                 transactionService
