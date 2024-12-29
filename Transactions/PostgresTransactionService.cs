@@ -1,6 +1,7 @@
 using System.Data.SqlTypes;
-using Npgsql;
 using EgenInlämning;
+using Npgsql;
+
 //using EgenInlämning.User;
 //När jag vill deleta, ta in transaktionerna i en lista, gå sedan igenom listan och sätt ett index på den kopplat till id, för att genom den deleta transaktionen
 
@@ -31,14 +32,8 @@ namespace EgenInlämning.Transactions
                 Type = type,
                 Date = DateTime.Now,
             };
-            var sql =
-                @"INSERT INTO transaction (id, user_id, type, amount, creation_date) VALUES (
-            @id,
-            @user_id,
-            @type,
-            @amount,
-            @creation_date
-        )";
+            var sql = SqlQueries.CreateTransactionSql;
+           
             using (var cmd = new NpgsqlCommand(sql, this.connection))
             {
                 cmd.Parameters.AddWithValue("@id", transaction.Id);
@@ -50,10 +45,7 @@ namespace EgenInlämning.Transactions
                 cmd.ExecuteNonQuery();
             }
 
-            var updateBalanceSql =
-                @"UPDATE users 
-              SET balance = balance + @amount 
-              WHERE id = @user_Id";
+            var updateBalanceSql = SqlQueries.UpdateBalanceSql;
 
             using (var updatecmd = new NpgsqlCommand(updateBalanceSql, connection))
             {
@@ -82,8 +74,8 @@ namespace EgenInlämning.Transactions
             {
                 throw new ArgumentException("You are not logged in.");
             }
-            var checkBalanceSql = "SELECT balance FROM users WHERE id = @user_Id";
-            using (var checkBalanceCmd = new NpgsqlCommand(checkBalanceSql, connection))
+            var sql = SqlQueries.BalanceSql;
+            using (var checkBalanceCmd = new NpgsqlCommand(sql, connection))
             {
                 checkBalanceCmd.Parameters.AddWithValue("@user_Id", user.Id);
                 var newBalance = (decimal)checkBalanceCmd.ExecuteScalar();
@@ -100,13 +92,6 @@ namespace EgenInlämning.Transactions
             }
 
             var sql = SqlQueries.YearSql;
-        //         @"
-        // SELECT t.id AS transaction_id, t.amount, t.type, t.creation_date
-        // FROM transaction t
-        // INNER JOIN users u ON user_id = u.id
-        // WHERE u.id = @user_Id
-        // AND EXTRACT(YEAR FROM creation_date) = @year
-        // ORDER BY t.creation_date DESC";
 
             using (var cmd = new NpgsqlCommand(sql, this.connection))
             {
@@ -141,19 +126,10 @@ namespace EgenInlämning.Transactions
             {
                 throw new ArgumentException("You are not logged in.");
             }
-            var sql =
-                @"
-        SELECT t.id AS transaction_id, t.amount, t.type, t.creation_date
-        FROM transaction t
-        INNER JOIN users u ON user_id = u.id
-        WHERE u.id = @user_Id
-        AND EXTRACT(YEAR FROM creation_date) = @year
-        AND EXTRACT(MONTH FROM creation_date) = @month
-        ORDER BY t.creation_date DESC";
+            var sql = SqlQueries.MonthSql;
 
             using (var cmd = new NpgsqlCommand(sql, this.connection))
             {
-                cmd.Parameters.AddWithValue("@user_Id", user.Id);
                 cmd.Parameters.AddWithValue("@year", year);
                 cmd.Parameters.AddWithValue("@month", month);
                 using (var reader = cmd.ExecuteReader())
@@ -177,26 +153,18 @@ namespace EgenInlämning.Transactions
                 }
             }
         }
-         public List<Transaction> GetTransactionsByWeek(Guid user_Id, int year, int month)
+
+        public List<Transaction> GetTransactionsByWeek(int year, int month)
         {
             var user = userService.GetLoggedInUser();
             if (user == null)
             {
                 throw new ArgumentException("You are not logged in.");
             }
-            var sql =
-                @"
-        SELECT t.id AS transaction_id, t.amount, t.type, t.creation_date
-        FROM transaction t
-        INNER JOIN users u ON user_id = u.id
-        WHERE u.id = @user_Id
-        AND EXTRACT(YEAR FROM creation_date) = @year
-        AND EXTRACT(MONTH FROM creation_date) = @month
-        ORDER BY t.creation_date DESC";
+            var sql = SqlQueries.WeekSql;
 
-            using (var cmd = new NpgsqlCommand(SqlMonth, this.connection))
+            using (var cmd = new NpgsqlCommand(sql, this.connection))
             {
-                cmd.Parameters.AddWithValue("@user_Id", user.Id);
                 cmd.Parameters.AddWithValue("@year", year);
                 cmd.Parameters.AddWithValue("@month", month);
                 using (var reader = cmd.ExecuteReader())
