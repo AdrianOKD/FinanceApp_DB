@@ -26,7 +26,7 @@ class Program
 
         IUserService userService = new PostgresUserService(connection);
         IMenuService menuService = new SimpleMenuService();
-        ITransactionService transactionService = new PostgresTransactionService(
+        ITransactionService transactionService = new TransactionService(
             userService,
             connection
         );
