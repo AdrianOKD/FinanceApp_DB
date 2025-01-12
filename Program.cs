@@ -24,7 +24,7 @@ class Program
         using var createTableCmd = new NpgsqlCommand(sql, connection);
         createTableCmd.ExecuteNonQuery();
 
-        IUserService userService = new PostgresUserService(connection);
+        IUserService userService = new UserService(connection);
         IMenuService menuService = new SimpleMenuService();
         ITransactionService transactionService = new TransactionService(
             userService,

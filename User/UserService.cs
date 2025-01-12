@@ -1,10 +1,93 @@
-namespace EgenInlämning
+namespace EgenInlämning;
+
+using Npgsql;
+
+public class UserService : IUserService
 {
-    public interface IUserService
+    private NpgsqlConnection connection;
+    private Guid? loggedInUser = null;
+
+    public UserService(NpgsqlConnection connection)
     {
-        User RegisterUser(string username, string password);
-        User? Login(string username, string password);
-        void Logout();
-        User? GetLoggedInUser();
+        this.connection = connection;
+    }
+
+    public User? GetLoggedInUser()
+    {
+        if (loggedInUser == null)
+        {
+            return null;
+        }
+
+        var sql = SqlQueries.GetUserSql;
+        using var cmd = new NpgsqlCommand(sql, this.connection);
+        cmd.Parameters.AddWithValue("@id", loggedInUser);
+
+        using var reader = cmd.ExecuteReader();
+        if (!reader.Read())
+        {
+            return null;
+        }
+
+        var user = new User
+        {
+            Id = reader.GetGuid(0),
+            Name = reader.GetString(2),
+            Password = reader.GetString(3),
+        };
+
+        return user;
+    }
+
+    public User? Login(string username, string password)
+    {
+        var sql = SqlQueries.LoginSql;
+        using var cmd = new NpgsqlCommand(sql, this.connection);
+        cmd.Parameters.AddWithValue("@username", username);
+        cmd.Parameters.AddWithValue("@password", password);
+
+        using var reader = cmd.ExecuteReader();
+        if (!reader.Read())
+        {
+            return null;
+        }
+
+        var user = new User
+        {
+            Id = reader.GetGuid(0),
+            Name = reader.GetString(2),
+            Password = reader.GetString(3),
+        };
+
+        loggedInUser = user.Id;
+
+        return user;
+    }
+
+    public void Logout()
+    {
+        loggedInUser = null;
+    }
+
+    public User RegisterUser(string username, string password)
+    {
+        var user = new User
+        {
+            Id = Guid.NewGuid(),
+            Name = username,
+            Password = password,
+            Balance = 0.00,
+        };
+
+        var sql = SqlQueries.RegUserSql;
+        using var cmd = new NpgsqlCommand(sql, this.connection);
+        cmd.Parameters.AddWithValue("@id", user.Id);
+        cmd.Parameters.AddWithValue("@name", user.Name);
+        cmd.Parameters.AddWithValue("@password", user.Password);
+        cmd.Parameters.AddWithValue("@balance", user.Balance);
+
+        cmd.ExecuteNonQuery();
+
+        return user;
     }
 }

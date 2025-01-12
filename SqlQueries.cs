@@ -67,5 +67,19 @@ namespace EgenInlämning
             WHERE u.id = @user_Id
             AND EXTRACT(YEAR FROM creation_date) = @year
             ORDER BY t.creation_date DESC";
+
+        public static string RegUserSql =>
+            @"INSERT INTO users (id, name, password) VALUES (
+            @id,
+            @name,
+            @password
+        )";
+        public static string LoginSql =>
+            @"SELECT * FROM users
+            WHERE name = @username 
+            AND password = @password";
+
+        public static string GetUserSql => 
+        @"SELECT * FROM users WHERE id = @id";
     }
 }
