@@ -7,6 +7,8 @@ namespace EgenInlämning.Transactions
         List<Transaction> GetTransactionsByYear(Guid user_Id, int year);
         void CheckBalanceCmd();
         List<Transaction> GetTransactionsByMonth(Guid user_id, int year, int month);
+
+        
       
         // Transaction GetTransactionByWeek();
     }

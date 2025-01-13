@@ -79,7 +79,10 @@ namespace EgenInlämning
             WHERE name = @username 
             AND password = @password";
 
-        public static string GetUserSql => 
-        @"SELECT * FROM users WHERE id = @id";
+        public static string GetUserSql => @"SELECT * FROM users WHERE id = @id";
+
+        public static string RemoveUserSql =>
+            @"DELETE FROM users
+        WHERE id = @id";
     }
 }

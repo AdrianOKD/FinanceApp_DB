@@ -10,13 +10,11 @@ namespace EgenInlämning.Commands
     public class GetTransactionsByDayCommand : Command
     {
         public GetTransactionsByDayCommand(
-            string name,
-            string description,
             IUserService userService,
             IMenuService menuService,
             ITransactionService transactionService
         )
-            : base(name, description, userService, menuService, transactionService) { }
+            : base("5", "description", userService, menuService, transactionService) { }
 
         public override void Execute(string[] args)
         {

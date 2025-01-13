@@ -28,8 +28,8 @@ namespace EgenInlämning.Menus
                 """
                   Welcome to the best finance app in the world of warcraft
                   --------------------------------------------------------
-                [1] Deposit... deposit amount
-                [2] Withdraw.. withdraw amount
+                [1] Deposit amount
+                [2] Withdraw amount
                 [3] Sort by year
                 [4] Sort by month
                 [5] Sort by week

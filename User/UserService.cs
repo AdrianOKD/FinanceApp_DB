@@ -90,4 +90,18 @@ public class UserService : IUserService
 
         return user;
     }
+
+    public void RemoveUser(string username, string password)
+    {
+        var currentUser = GetLoggedInUser();
+        if (currentUser == null)
+        {
+            System.Console.WriteLine("You have to log in to remove account");
+        }
+        var sql = SqlQueries.RemoveUserSql;
+        using var cmd = new NpgsqlCommand(sql, this.connection);
+        cmd.Parameters.AddWithValue("@id", currentUser);
+
+        cmd.ExecuteNonQuery();
+    }
 }

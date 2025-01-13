@@ -12,13 +12,7 @@ namespace EgenInlämning.Commands
             IMenuService menuService,
             ITransactionService transactionService
         )
-            : base(
-                "withdraw",
-                " Withdraw from account",
-                userService,
-                menuService,
-                transactionService
-            ) { }
+            : base("2", "Withdraw from account", userService, menuService, transactionService) { }
 
         public override void Execute(string[] args)
         {

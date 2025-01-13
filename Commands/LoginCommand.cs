@@ -16,28 +16,45 @@ namespace EgenInlämning.Commands
                 userService,
                 menuService,
                 transactionService
-            )
-        { }
+            ) { }
 
         public override void Execute(string[] args)
         {
-            System.Console.WriteLine("Enter Username");
-            string username = Console.ReadLine();
-            if(string.IsNullOrEmpty(username))
-            {System.Console.WriteLine("username cant be empty");
-            return;}
-            System.Console.WriteLine("Enter Password");
-            string password = Console.ReadLine();
-
-            User? user = userService.Login(username, password);
-            if (user == null)
+            while (true)
             {
-                Console.WriteLine("Wrong username or password.");
-                return;
-            }
+                System.Console.WriteLine("Enter Username");
+                var input = Console.ReadLine();
 
-            Console.WriteLine("You successfully logged in.");
-            menuService.SetMenu(new MainMenu(userService, menuService, transactionService));
+                if (string.IsNullOrEmpty(input))
+                {
+                    System.Console.WriteLine("username cant be empty");
+                    continue;
+                }
+
+                string username = input;
+
+                System.Console.WriteLine("Enter Password");
+                var input2 = Console.ReadLine();
+                if (string.IsNullOrEmpty(input2))
+                {
+                    System.Console.WriteLine("password cant be empty");
+                    continue;
+                }
+
+                string password = input2;
+
+                User? user = userService.Login(username, password);
+                if (user == null)
+                {
+                    Console.WriteLine("Wrong username or password.");
+                    continue;
+                }
+
+                Console.WriteLine("You successfully logged in.");
+                Console.ReadKey();
+                menuService.SetMenu(new MainMenu(userService, menuService, transactionService));
+                break;
+            }
         }
     }
 }

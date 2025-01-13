@@ -1,5 +1,3 @@
-using EgenInlämning;
-using EgenInlämning.Menus;
 using EgenInlämning.Menus;
 using EgenInlämning.Transactions;
 
@@ -12,7 +10,7 @@ namespace EgenInlämning.Commands
             IMenuService menuService,
             ITransactionService transactionService
         )
-            : base("deposit", "Deposit into account", userService, menuService, transactionService)
+            : base("1", "Deposit into account", userService, menuService, transactionService)
         { }
 
         public override void Execute(string[] args)
