@@ -97,11 +97,17 @@ public class UserService : IUserService
         if (currentUser == null)
         {
             System.Console.WriteLine("You have to log in to remove account");
+            return;
         }
         var sql = SqlQueries.RemoveUserSql;
         using var cmd = new NpgsqlCommand(sql, this.connection);
         cmd.Parameters.AddWithValue("@id", currentUser.Id);
-
-        cmd.ExecuteNonQuery();
+        try
+        {
+            cmd.ExecuteNonQuery();
+            loggedInUser = null;
+            System.Console.WriteLine("Account removed.");
+        }
+        catch { System.Console.WriteLine("Failed to remove account."); }
     }
 }
