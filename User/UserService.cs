@@ -20,23 +20,25 @@ public class UserService : IUserService
         }
 
         var sql = SqlQueries.GetUserSql;
-        using var cmd = new NpgsqlCommand(sql, this.connection);
+        using var cmd = new NpgsqlCommand(sql, connection);
         cmd.Parameters.AddWithValue("@id", loggedInUser);
-
-        using var reader = cmd.ExecuteReader();
-        if (!reader.Read())
+        try
         {
-            return null;
+            using var reader = cmd.ExecuteReader();
+            if (!reader.Read())
+            {
+                return null;
+            }
+
+            return new User
+            {
+                Id = reader.GetGuid(0),
+                Name = reader.GetString(2),
+                Password = reader.GetString(3),
+                Balance = reader.GetDouble(4)
+            };
         }
-
-        var user = new User
-        {
-            Id = reader.GetGuid(0),
-            Name = reader.GetString(2),
-            Password = reader.GetString(3),
-        };
-
-        return user;
+        catch { }
     }
 
     public User? Login(string username, string password)
@@ -108,6 +110,9 @@ public class UserService : IUserService
             loggedInUser = null;
             System.Console.WriteLine("Account removed.");
         }
-        catch { System.Console.WriteLine("Failed to remove account."); }
+        catch
+        {
+            System.Console.WriteLine("Failed to remove account.");
+        }
     }
 }
