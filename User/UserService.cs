@@ -100,7 +100,7 @@ public class UserService : IUserService
         }
         var sql = SqlQueries.RemoveUserSql;
         using var cmd = new NpgsqlCommand(sql, this.connection);
-        cmd.Parameters.AddWithValue("@id", currentUser);
+        cmd.Parameters.AddWithValue("@id", currentUser.Id);
 
         cmd.ExecuteNonQuery();
     }
