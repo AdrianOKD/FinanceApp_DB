@@ -82,40 +82,64 @@ public class UserService : IUserService
 
     public void Logout()
     {
+        if (loggedInUser == null)
+        {
+            throw new InvalidOperationException("No user is currently logged in");
+        }
+
         loggedInUser = null;
     }
 
-    public User RegisterUser(string username, string password)
+    public User? RegisterUser(string username, string password)
     {
-        var checkSql = SqlQueries.CheckUserNameSql;
-        using (var checkCmd = new NpgsqlCommand(checkSql, this.connection))
+        using (var dbTransaction = connection.BeginTransaction())
         {
-            checkCmd.Parameters.AddWithValue("@username", username);
-            var count = (long)checkCmd.ExecuteScalar();
-
-            if (count > 0)
+            try
             {
-                throw new Exception("Username already exists");
+                var checkSql = SqlQueries.CheckUserNameSql;
+                using (var checkCmd = new NpgsqlCommand(checkSql, this.connection, dbTransaction))
+                {
+                    checkCmd.Parameters.AddWithValue("@username", username);
+                    var count = (long)checkCmd.ExecuteScalar();
+
+                    if (count > 0)
+                    {
+                        Console.WriteLine(
+                            "Username already exists. Please choose a different username."
+                        );
+                        dbTransaction.Rollback();
+                        return null;
+                    }
+                }
+                var user = new User
+                {
+                    Id = Guid.NewGuid(),
+                    Username = username,
+                    Password = password,
+                    Balance = 0.00,
+                };
+
+                var sql = SqlQueries.CreateUserSql;
+                using (var cmd = new NpgsqlCommand(sql, this.connection, dbTransaction))
+                {
+                    cmd.Parameters.AddWithValue("@user_id", user.Id);
+                    cmd.Parameters.AddWithValue("@username", user.Username);
+                    cmd.Parameters.AddWithValue("@password", user.Password);
+                    cmd.Parameters.AddWithValue("@balance", user.Balance);
+
+                    cmd.ExecuteNonQuery();
+                }
+                dbTransaction.Commit();
+                Console.WriteLine($"Successfully registered user: {username}");
+                return user;
+            }
+            catch (Exception ex)
+            {
+                dbTransaction.Rollback();
+                Console.WriteLine($"Failed to register user: {ex.Message}");
+                return null;
             }
         }
-        var user = new User
-        {
-            Id = Guid.NewGuid(),
-            Username = username,
-            Password = password,
-            Balance = 0.00,
-        };
-
-        var sql = SqlQueries.CreateUserSql;
-        using var cmd = new NpgsqlCommand(sql, this.connection);
-        cmd.Parameters.AddWithValue("@user_id", user.Id);
-        cmd.Parameters.AddWithValue("@username", user.Username);
-        cmd.Parameters.AddWithValue("@password", user.Password);
-        cmd.Parameters.AddWithValue("@balance", user.Balance);
-
-        cmd.ExecuteNonQuery();
-
-        return user;
     }
 
     public void RemoveUser(string username, string password)

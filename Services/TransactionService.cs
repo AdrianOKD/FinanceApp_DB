@@ -28,37 +28,59 @@ namespace EgenInlämning
                 Date = DateTime.Now,
             };
             var sql = SqlQueries.CreateTransactionSql;
-
-            using (var cmd = new NpgsqlCommand(sql, this.connection))
+            using (var dbTransaction = connection.BeginTransaction())
             {
-                cmd.Parameters.AddWithValue("@transaction_id", transaction.Id);
-                cmd.Parameters.AddWithValue("@user_id", user.Id);
-                cmd.Parameters.AddWithValue("@type", transaction.Type);
-                cmd.Parameters.AddWithValue("@amount", amount);
-                cmd.Parameters.AddWithValue("@created_at", transaction.Date);
-
-                cmd.ExecuteNonQuery();
-            }
-
-            var updateBalanceSql = SqlQueries.UpdateBalanceSql;
-
-            using (var updatecmd = new NpgsqlCommand(updateBalanceSql, connection))
-            {
-                updatecmd.Parameters.AddWithValue("@user_id", user.Id);
-                updatecmd.Parameters.AddWithValue("@amount", amount);
-
-                Console.WriteLine($"Updating balance for user: {user.Username}");
-                Console.WriteLine($"Amount to add: {amount}");
-
-                updatecmd.ExecuteNonQuery();
-                var checkBalanceSql = SqlQueries.GetBalanceSql;
-                using (var checkBalanceCmd = new NpgsqlCommand(checkBalanceSql, connection))
+                try
                 {
-                    checkBalanceCmd.Parameters.AddWithValue("@user_id", user.Id);
-                    var newBalance = (decimal)checkBalanceCmd.ExecuteScalar();
-                    Console.WriteLine($" Your new balance is: {newBalance}");
+                    using (var cmd = new NpgsqlCommand(sql, this.connection, dbTransaction))
+                    {
+                        cmd.Parameters.AddWithValue("@transaction_id", transaction.Id);
+                        cmd.Parameters.AddWithValue("@user_id", user.Id);
+                        cmd.Parameters.AddWithValue("@type", transaction.Type);
+                        cmd.Parameters.AddWithValue("@amount", amount);
+                        cmd.Parameters.AddWithValue("@created_at", transaction.Date);
+
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    var updateBalanceSql = SqlQueries.UpdateBalanceSql;
+                    using (
+                        var updatecmd = new NpgsqlCommand(
+                            updateBalanceSql,
+                            connection,
+                            dbTransaction
+                        )
+                    )
+                    {
+                        updatecmd.Parameters.AddWithValue("@user_id", user.Id);
+                        updatecmd.Parameters.AddWithValue("@amount", amount);
+
+                        Console.WriteLine($"Updating balance for user: {user.Username}");
+                        Console.WriteLine($"Amount to add: {amount}");
+
+                        updatecmd.ExecuteNonQuery();
+                    }
+                    var checkBalanceSql = SqlQueries.GetBalanceSql;
+                    using (
+                        var checkBalanceCmd = new NpgsqlCommand(
+                            checkBalanceSql,
+                            connection,
+                            dbTransaction
+                        )
+                    )
+                    {
+                        checkBalanceCmd.Parameters.AddWithValue("@user_id", user.Id);
+                        var newBalance = (decimal)checkBalanceCmd.ExecuteScalar();
+                        Console.WriteLine($" Your new balance is: {newBalance}");
+                    }
+                    dbTransaction.Commit();
+                    return transaction;
                 }
-                return transaction;
+                catch (Exception ex)
+                {
+                    dbTransaction.Rollback();
+                    throw new Exception($"Failed to process transaction: {ex.Message}");
+                }
             }
         }
 

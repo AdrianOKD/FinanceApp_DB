@@ -1,5 +1,3 @@
-
-
 namespace EgenInlämning
 {
     public class MainMenu : Menu
@@ -18,6 +16,7 @@ namespace EgenInlämning
             AddCommand(new GetTransactionsByYearCommand(userService, menuService, transactionService));
             AddCommand(new GetTransactionsByMonthCommand(userService, menuService, transactionService));
             AddCommand(new GetTransactionsByWeekCommand(userService, menuService, transactionService) );
+             AddCommand(new GetTransactionsByDayCommand(userService, menuService, transactionService) );
              AddCommand(new GetTransactionsByDayCommand(userService, menuService, transactionService) );
             //csharp-ignore-end
         }

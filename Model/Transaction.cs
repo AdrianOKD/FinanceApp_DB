@@ -1,5 +1,3 @@
-using System.IO.Compression;
-
 namespace EgenInlämning
 {
     public class Transaction

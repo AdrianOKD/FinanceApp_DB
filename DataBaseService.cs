@@ -1,11 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using EgenInlämning.Menus;
-using EgenInlämning.Transactions;
-using Npgsql;
-
 namespace EgenInlämning;
 
 public class DataBaseService

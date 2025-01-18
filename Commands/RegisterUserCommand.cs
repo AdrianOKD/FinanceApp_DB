@@ -1,4 +1,3 @@
-
 namespace EgenInlämning
 {
     public class RegisterUserCommand : Command
@@ -24,17 +23,18 @@ namespace EgenInlämning
             }
             System.Console.WriteLine("Enter Password");
             string password = Console.ReadLine();
+
             if (string.IsNullOrEmpty(password))
             {
                 Console.WriteLine("Password can't be empty");
                 return;
             }
-            User user = userService.RegisterUser(username, password);
+            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(password);
+            User user = userService.RegisterUser(username, hashedPassword);
             Console.WriteLine($"Created user '{user.Username}' with ID: {user.Id}");
-            
 
             Console.WriteLine($"Created user '{user.Username}'");
-             userService.Login(username, password);
+            userService.Login(username, password);
             menuService.SetMenu(new MainMenu(userService, menuService, transactionService));
         }
     }
