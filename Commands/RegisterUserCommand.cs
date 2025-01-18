@@ -13,7 +13,6 @@ namespace EgenInlämning
         public override void Execute(string[] args)
         {
             Console.WriteLine("Starting registration process...");
-
             System.Console.WriteLine("Enter Username");
             string username = Console.ReadLine();
             if (string.IsNullOrEmpty(username))
@@ -31,8 +30,10 @@ namespace EgenInlämning
             }
             string hashedPassword = BCrypt.Net.BCrypt.HashPassword(password);
             User user = userService.RegisterUser(username, hashedPassword);
-            Console.WriteLine($"Created user '{user.Username}' with ID: {user.Id}");
-
+            if (user == null)
+            {
+                return;
+            }
             Console.WriteLine($"Created user '{user.Username}'");
             userService.Login(username, password);
             menuService.SetMenu(new MainMenu(userService, menuService, transactionService));

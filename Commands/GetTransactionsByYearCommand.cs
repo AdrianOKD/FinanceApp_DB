@@ -1,5 +1,3 @@
-
-
 namespace EgenInlämning
 {
     public class GetTransactionsByYearCommand : Command

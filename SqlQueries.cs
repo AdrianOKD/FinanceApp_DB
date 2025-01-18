@@ -107,8 +107,7 @@ public class SqlQueries
             password,
             balance
         FROM users
-        WHERE username = @username 
-            AND password = @password";
+        WHERE username = @username";
 
     public static string GetUserSql =>
         @"SELECT *

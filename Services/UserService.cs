@@ -16,7 +16,6 @@ public class UserService : IUserService
     {
         if (loggedInUser == null)
         {
-            System.Console.WriteLine("No user currently logged in");
             return null;
         }
 
@@ -51,7 +50,6 @@ public class UserService : IUserService
         var sql = SqlQueries.LoginSql;
         using var cmd = new NpgsqlCommand(sql, this.connection);
         cmd.Parameters.AddWithValue("@username", username);
-        cmd.Parameters.AddWithValue("@password", password);
         try
         {
             using var reader = cmd.ExecuteReader();
@@ -68,14 +66,18 @@ public class UserService : IUserService
                 Password = reader.GetString(2),
                 Balance = reader.GetDouble(3),
             };
+            if (!BCrypt.Net.BCrypt.Verify(password, user.Password))
+            {
+                Console.WriteLine("Invalid username or password");
+                return null;
+            }
 
             loggedInUser = user.Id;
-            System.Console.WriteLine($"Logged in with ID: {loggedInUser}");
             return user;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            System.Console.WriteLine($"Could not find account: {ex.Message}");
+            System.Console.WriteLine($"Invalid username or password");
             return null;
         }
     }
