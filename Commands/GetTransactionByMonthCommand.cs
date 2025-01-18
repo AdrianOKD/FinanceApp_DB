@@ -1,11 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using EgenInlämning.Menus;
-using EgenInlämning.Transactions;
-
-namespace EgenInlämning.Commands
+namespace EgenInlämning
 {
     public class GetTransactionsByMonthCommand : Command
     {
@@ -30,9 +23,12 @@ namespace EgenInlämning.Commands
                 Console.WriteLine("You must be logged in to view transactions.");
                 return;
             }
-
-            int year = Convert.ToInt32(args[1]);
-            int month = Convert.ToInt32(args[2]);
+            System.Console.WriteLine("Enter year (YYYY):");
+            string yearInput = Console.ReadLine();
+            int year = Convert.ToInt32(yearInput);
+            System.Console.WriteLine("Enter month (1-12):");
+            string input2 = Console.ReadLine();
+            int month = Convert.ToInt32(input2);
 
             List<Transaction> transactions = transactionService.GetTransactionsByMonth(
                 currentUser.Id,

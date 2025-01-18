@@ -41,6 +41,14 @@ public class SqlQueries
         FROM users 
         WHERE user_id = @user_id";
 
+    public static string GetDailyTransactionsSql =>
+        @"
+        SELECT transaction_id, amount, type, created_at 
+        FROM transactions 
+        WHERE user_id = @user_id 
+        AND DATE(created_at) = @date
+        ORDER BY created_at";
+
     public static string GetWeeklyTransactionsSql =>
         @"SELECT 
             t.transaction_id,
@@ -63,8 +71,8 @@ public class SqlQueries
         FROM transactions t
         INNER JOIN users u ON t.user_id = u.user_id
         WHERE u.user_id = @user_id
-            AND EXTRACT(YEAR FROM created_at) = @year
-            AND EXTRACT(MONTH FROM created_at) = @month
+            AND EXTRACT(YEAR FROM t.created_at) = @year
+            AND EXTRACT(MONTH FROM t.created_at) = @month
         ORDER BY t.created_at DESC";
 
     public static string GetYearlyTransactionsSql =>
@@ -110,4 +118,7 @@ public class SqlQueries
     public static string DeleteUserSql =>
         @"DELETE FROM users
         WHERE user_id = @user_id";
+
+    public static string CheckUserNameSql =>
+        @"SELECT COUNT(*) FROM users WHERE username = @username";
 }

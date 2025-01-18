@@ -1,7 +1,5 @@
-using EgenInlämning.Commands;
-using EgenInlämning.Transactions;
 
-namespace EgenInlämning.Menus
+namespace EgenInlämning
 {
     public class LoginMenu : Menu
     {

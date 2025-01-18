@@ -1,8 +1,6 @@
-using EgenInlämning.Commands;
-using EgenInlämning.Transactions;
-using Npgsql;
 
-namespace EgenInlämning.Menus
+
+namespace EgenInlämning
 {
     public class MainMenu : Menu
     {
@@ -19,6 +17,8 @@ namespace EgenInlämning.Menus
             AddCommand(new ShowBalanceCommand(userService,menuService,transactionService));
             AddCommand(new GetTransactionsByYearCommand(userService, menuService, transactionService));
             AddCommand(new GetTransactionsByMonthCommand(userService, menuService, transactionService));
+            AddCommand(new GetTransactionsByWeekCommand(userService, menuService, transactionService) );
+             AddCommand(new GetTransactionsByDayCommand(userService, menuService, transactionService) );
             //csharp-ignore-end
         }
 
@@ -33,6 +33,7 @@ namespace EgenInlämning.Menus
                 [3] Sort by year
                 [4] Sort by month
                 [5] Sort by week
+                [6] Sort by year
                 [6] Sort by year
                 [3] Exit
 

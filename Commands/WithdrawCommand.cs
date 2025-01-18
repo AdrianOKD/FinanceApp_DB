@@ -1,9 +1,5 @@
-using System.Data.Common;
-using System.Runtime;
-using EgenInlämning.Menus;
-using EgenInlämning.Transactions;
 
-namespace EgenInlämning.Commands
+namespace EgenInlämning
 {
     public class WithdrawCommand : Command
     {
@@ -23,11 +19,12 @@ namespace EgenInlämning.Commands
                 return;
             }
 
-            string type = args[0];
-            double amount = -Convert.ToDouble(args[1]);
+            System.Console.WriteLine("Type amount you want to deposite.");
+            string input = Console.ReadLine();
+            double amount = -Convert.ToDouble(input);
 
             Transaction transaction = transactionService.CreateTransaction(
-                user_Id: currentUser.Id,
+                user_id: currentUser.Id,
                 amount: amount,
                 type: "withdraw"
             );

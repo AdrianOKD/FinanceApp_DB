@@ -1,8 +1,4 @@
-using System.ComponentModel.DataAnnotations;
-using EgenInlämning.Menus;
-using EgenInlämning.Transactions;
-
-namespace EgenInlämning.Commands
+namespace EgenInlämning
 {
     public class RemoveTransactionCommand : Command
     {

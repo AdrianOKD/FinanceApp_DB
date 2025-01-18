@@ -1,4 +1,4 @@
-namespace EgenInlämning.Menus
+namespace EgenInlämning
 {
     public interface IMenuService
     {

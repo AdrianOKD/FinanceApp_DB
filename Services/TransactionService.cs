@@ -1,8 +1,6 @@
-using System.Data.SqlTypes;
-using EgenInlämning;
 using Npgsql;
 
-namespace EgenInlämning.Transactions
+namespace EgenInlämning
 {
     public class TransactionService : ITransactionService
     {
@@ -33,11 +31,11 @@ namespace EgenInlämning.Transactions
 
             using (var cmd = new NpgsqlCommand(sql, this.connection))
             {
-                cmd.Parameters.AddWithValue("@id", transaction.Id);
+                cmd.Parameters.AddWithValue("@transaction_id", transaction.Id);
                 cmd.Parameters.AddWithValue("@user_id", user.Id);
                 cmd.Parameters.AddWithValue("@type", transaction.Type);
                 cmd.Parameters.AddWithValue("@amount", amount);
-                cmd.Parameters.AddWithValue("@creation_date", transaction.Date);
+                cmd.Parameters.AddWithValue("@created_at", transaction.Date);
 
                 cmd.ExecuteNonQuery();
             }
@@ -53,7 +51,7 @@ namespace EgenInlämning.Transactions
                 Console.WriteLine($"Amount to add: {amount}");
 
                 updatecmd.ExecuteNonQuery();
-                var checkBalanceSql = "SELECT balance FROM users WHERE id = @user_id";
+                var checkBalanceSql = SqlQueries.GetBalanceSql;
                 using (var checkBalanceCmd = new NpgsqlCommand(checkBalanceSql, connection))
                 {
                     checkBalanceCmd.Parameters.AddWithValue("@user_id", user.Id);
@@ -64,7 +62,7 @@ namespace EgenInlämning.Transactions
             }
         }
 
-      //  public Transaction RemoveTransactionCommand() { return }
+        //  public Transaction RemoveTransactionCommand() { return }
 
         public void CheckBalanceCmd()
         {
@@ -109,7 +107,7 @@ namespace EgenInlämning.Transactions
                                     ? 0.00
                                     : reader.GetDouble(reader.GetOrdinal("amount")),
                                 Type = reader.GetString(reader.GetOrdinal("type")),
-                                Date = reader.GetDateTime(reader.GetOrdinal("creation_date")),
+                                Date = reader.GetDateTime(reader.GetOrdinal("created_at")),
                             }
                         );
                     }
@@ -129,6 +127,7 @@ namespace EgenInlämning.Transactions
 
             using (var cmd = new NpgsqlCommand(sql, this.connection))
             {
+                cmd.Parameters.AddWithValue("@user_id", user.Id);
                 cmd.Parameters.AddWithValue("@year", year);
                 cmd.Parameters.AddWithValue("@month", month);
                 using (var reader = cmd.ExecuteReader())
@@ -144,7 +143,7 @@ namespace EgenInlämning.Transactions
                                     ? 0.00
                                     : reader.GetDouble(reader.GetOrdinal("amount")),
                                 Type = reader.GetString(reader.GetOrdinal("type")),
-                                Date = reader.GetDateTime(reader.GetOrdinal("creation_date")),
+                                Date = reader.GetDateTime(reader.GetOrdinal("created_at")),
                             }
                         );
                     }
@@ -153,7 +152,7 @@ namespace EgenInlämning.Transactions
             }
         }
 
-        public List<Transaction> GetTransactionsByWeek(int year, int month)
+        public List<Transaction> GetTransactionsByWeek(Guid user_id, int year, int week)
         {
             var user = userService.GetLoggedInUser();
             if (user == null)
@@ -164,8 +163,9 @@ namespace EgenInlämning.Transactions
 
             using (var cmd = new NpgsqlCommand(sql, this.connection))
             {
+                cmd.Parameters.AddWithValue("@user_id", user.Id);
                 cmd.Parameters.AddWithValue("@year", year);
-                cmd.Parameters.AddWithValue("@month", month);
+                cmd.Parameters.AddWithValue("@week", week);
                 using (var reader = cmd.ExecuteReader())
                 {
                     var transactions = new List<Transaction>();
@@ -179,7 +179,46 @@ namespace EgenInlämning.Transactions
                                     ? 0.00
                                     : reader.GetDouble(reader.GetOrdinal("amount")),
                                 Type = reader.GetString(reader.GetOrdinal("type")),
-                                Date = reader.GetDateTime(reader.GetOrdinal("creation_date")),
+                                Date = reader.GetDateTime(reader.GetOrdinal("created_at")),
+                            }
+                        );
+                    }
+                    return transactions;
+                }
+            }
+        }
+
+        public List<Transaction> GetTransactionsByDay(Guid user_id, int year, int month, int day)
+        {
+            var user = userService.GetLoggedInUser();
+            if (user == null)
+            {
+                throw new ArgumentException("You are not logged in.");
+            }
+
+            var sql = SqlQueries.GetDailyTransactionsSql;
+
+            using (var cmd = new NpgsqlCommand(sql, this.connection))
+            {
+                cmd.Parameters.AddWithValue("@user_id", user.Id);
+                cmd.Parameters.AddWithValue("@year", year);
+                cmd.Parameters.AddWithValue("@month", month);
+                cmd.Parameters.AddWithValue("@month", month);
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    var transactions = new List<Transaction>();
+                    while (reader.Read())
+                    {
+                        transactions.Add(
+                            new Transaction
+                            {
+                                Id = reader.GetGuid(reader.GetOrdinal("transaction_id")),
+                                Amount = reader.IsDBNull(reader.GetOrdinal("amount"))
+                                    ? 0.00
+                                    : reader.GetDouble(reader.GetOrdinal("amount")),
+                                Type = reader.GetString(reader.GetOrdinal("type")),
+                                Date = reader.GetDateTime(reader.GetOrdinal("created_at")),
                             }
                         );
                     }

@@ -1,6 +1,5 @@
-using EgenInlämning.Commands;
 
-namespace EgenInlämning.Menus
+namespace EgenInlämning
 {
     public abstract class Menu
     {
@@ -23,8 +22,11 @@ namespace EgenInlämning.Menus
                     return;
                 }
             }
-
-            throw new ArgumentException("Command not found.");
+             
+           Console.WriteLine("Command not found.");
+           Display();
+             
+           
         }
 
         public abstract void Display();

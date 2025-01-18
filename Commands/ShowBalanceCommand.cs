@@ -1,7 +1,6 @@
-using EgenInlämning.Menus;
-using EgenInlämning.Transactions;
 
-namespace EgenInlämning.Commands
+
+namespace EgenInlämning
 {
     public class ShowBalanceCommand : Command
     {

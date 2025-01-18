@@ -87,6 +87,17 @@ public class UserService : IUserService
 
     public User RegisterUser(string username, string password)
     {
+        var checkSql = SqlQueries.CheckUserNameSql;
+        using (var checkCmd = new NpgsqlCommand(checkSql, this.connection))
+        {
+            checkCmd.Parameters.AddWithValue("@username", username);
+            var count = (long)checkCmd.ExecuteScalar();
+
+            if (count > 0)
+            {
+                throw new Exception("Username already exists");
+            }
+        }
         var user = new User
         {
             Id = Guid.NewGuid(),
