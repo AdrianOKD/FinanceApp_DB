@@ -10,8 +10,7 @@ namespace EgenInlämning.Commands
             IMenuService menuService,
             ITransactionService transactionService
         )
-            : base("1", "Deposit into account", userService, menuService, transactionService)
-        { }
+            : base("1", "Deposit into account", userService, menuService, transactionService) { }
 
         public override void Execute(string[] args)
         {

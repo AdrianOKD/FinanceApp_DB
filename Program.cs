@@ -15,8 +15,9 @@ class Program
     public static void Main(string[] args)
     {
         string connectionString =
-            "Host=localhost;Username=postgres;Password=password;Database=financedatabase";
+            "Host=localhost;Username=postgres;Password=password;Database=FinanceDatabase";
         using var connection = new NpgsqlConnection(connectionString);
+        
         connection.Open();
 
         var sql = SqlQueries.CreateTablesSql;

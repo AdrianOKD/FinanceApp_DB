@@ -4,7 +4,7 @@ using Npgsql;
 
 public class UserService : IUserService
 {
-    private NpgsqlConnection connection;
+    private readonly NpgsqlConnection connection;
     private Guid? loggedInUser = null;
 
     public UserService(NpgsqlConnection connection)
@@ -14,14 +14,14 @@ public class UserService : IUserService
 
     public User? GetLoggedInUser()
     {
+        var sql = SqlQueries.GetUserSql;
+        using var cmd = new NpgsqlCommand(sql, connection);
+        cmd.Parameters.AddWithValue("@id", loggedInUser);
         if (loggedInUser == null)
         {
             return null;
         }
 
-        var sql = SqlQueries.GetUserSql;
-        using var cmd = new NpgsqlCommand(sql, connection);
-        cmd.Parameters.AddWithValue("@id", loggedInUser);
         try
         {
             using var reader = cmd.ExecuteReader();
@@ -33,12 +33,16 @@ public class UserService : IUserService
             return new User
             {
                 Id = reader.GetGuid(0),
-                Name = reader.GetString(2),
+                Username = reader.GetString(2),
                 Password = reader.GetString(3),
-                Balance = reader.GetDouble(4)
+                Balance = reader.GetDouble(4),
             };
         }
-        catch { }
+        catch
+        {
+            System.Console.WriteLine("Unable to find account");
+            return null;
+        }
     }
 
     public User? Login(string username, string password)
@@ -47,23 +51,31 @@ public class UserService : IUserService
         using var cmd = new NpgsqlCommand(sql, this.connection);
         cmd.Parameters.AddWithValue("@username", username);
         cmd.Parameters.AddWithValue("@password", password);
-
-        using var reader = cmd.ExecuteReader();
-        if (!reader.Read())
+        try
         {
+            using var reader = cmd.ExecuteReader();
+            if (!reader.Read())
+            {
+                System.Console.WriteLine("Invalid username or password");
+                return null;
+            }
+
+            var user = new User
+            {
+                Id = reader.GetGuid(0),
+                Username = reader.GetString(2),
+                Password = reader.GetString(3),
+                Balance = reader.GetDouble(4),
+            };
+
+            loggedInUser = user.Id;
+            return user;
+        }
+        catch
+        {
+            System.Console.WriteLine("Could not find account");
             return null;
         }
-
-        var user = new User
-        {
-            Id = reader.GetGuid(0),
-            Name = reader.GetString(2),
-            Password = reader.GetString(3),
-        };
-
-        loggedInUser = user.Id;
-
-        return user;
     }
 
     public void Logout()
@@ -76,15 +88,15 @@ public class UserService : IUserService
         var user = new User
         {
             Id = Guid.NewGuid(),
-            Name = username,
+            Username = username,
             Password = password,
             Balance = 0.00,
         };
 
-        var sql = SqlQueries.RegUserSql;
+        var sql = SqlQueries.CreateUserSql;
         using var cmd = new NpgsqlCommand(sql, this.connection);
         cmd.Parameters.AddWithValue("@id", user.Id);
-        cmd.Parameters.AddWithValue("@name", user.Name);
+        cmd.Parameters.AddWithValue("@name", user.Username);
         cmd.Parameters.AddWithValue("@password", user.Password);
         cmd.Parameters.AddWithValue("@balance", user.Balance);
 
@@ -101,7 +113,7 @@ public class UserService : IUserService
             System.Console.WriteLine("You have to log in to remove account");
             return;
         }
-        var sql = SqlQueries.RemoveUserSql;
+        var sql = SqlQueries.DeleteUserSql;
         using var cmd = new NpgsqlCommand(sql, this.connection);
         cmd.Parameters.AddWithValue("@id", currentUser.Id);
         try
