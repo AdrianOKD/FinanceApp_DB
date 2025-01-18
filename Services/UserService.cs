@@ -14,13 +14,15 @@ public class UserService : IUserService
 
     public User? GetLoggedInUser()
     {
-        var sql = SqlQueries.GetUserSql;
-        using var cmd = new NpgsqlCommand(sql, connection);
-        cmd.Parameters.AddWithValue("@id", loggedInUser);
         if (loggedInUser == null)
         {
+            System.Console.WriteLine("No user currently logged in");
             return null;
         }
+
+        var sql = SqlQueries.GetUserSql;
+        using var cmd = new NpgsqlCommand(sql, connection);
+        cmd.Parameters.AddWithValue("@user_id", loggedInUser);
 
         try
         {
@@ -29,18 +31,17 @@ public class UserService : IUserService
             {
                 return null;
             }
-
             return new User
             {
                 Id = reader.GetGuid(0),
-                Username = reader.GetString(2),
-                Password = reader.GetString(3),
-                Balance = reader.GetDouble(4),
+                Username = reader.GetString(1),
+                Password = reader.GetString(2),
+                Balance = reader.GetDouble(3),
             };
         }
-        catch
+        catch (Exception ex)
         {
-            System.Console.WriteLine("Unable to find account");
+            System.Console.WriteLine($"Unable to find account{ex.Message}");
             return null;
         }
     }
@@ -63,17 +64,18 @@ public class UserService : IUserService
             var user = new User
             {
                 Id = reader.GetGuid(0),
-                Username = reader.GetString(2),
-                Password = reader.GetString(3),
-                Balance = reader.GetDouble(4),
+                Username = reader.GetString(1),
+                Password = reader.GetString(2),
+                Balance = reader.GetDouble(3),
             };
 
             loggedInUser = user.Id;
+            System.Console.WriteLine($"Logged in with ID: {loggedInUser}");
             return user;
         }
-        catch
+        catch (Exception ex)
         {
-            System.Console.WriteLine("Could not find account");
+            System.Console.WriteLine($"Could not find account: {ex.Message}");
             return null;
         }
     }
@@ -95,8 +97,8 @@ public class UserService : IUserService
 
         var sql = SqlQueries.CreateUserSql;
         using var cmd = new NpgsqlCommand(sql, this.connection);
-        cmd.Parameters.AddWithValue("@id", user.Id);
-        cmd.Parameters.AddWithValue("@name", user.Username);
+        cmd.Parameters.AddWithValue("@user_id", user.Id);
+        cmd.Parameters.AddWithValue("@username", user.Username);
         cmd.Parameters.AddWithValue("@password", user.Password);
         cmd.Parameters.AddWithValue("@balance", user.Balance);
 
@@ -115,7 +117,7 @@ public class UserService : IUserService
         }
         var sql = SqlQueries.DeleteUserSql;
         using var cmd = new NpgsqlCommand(sql, this.connection);
-        cmd.Parameters.AddWithValue("@id", currentUser.Id);
+        cmd.Parameters.AddWithValue("@user_id", currentUser.Id);
         try
         {
             cmd.ExecuteNonQuery();

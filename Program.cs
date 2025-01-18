@@ -5,11 +5,6 @@ using EgenInlämning.Menus;
 using EgenInlämning.Transactions;
 using Npgsql;
 
-// user_account
-// savings account : user_account
-// expendature : user_account
-// potentiellt att användendaren kan skapa olika konton alltså namnge konton, dom innehåller samma
-
 class Program
 {
     public static void Main(string[] args)
@@ -47,7 +42,5 @@ class Program
                 break;
             }
         }
-        // mainMenu.CreateNewConnection();
-        // DataBaseService.InitializeDatabase();
     }
 }

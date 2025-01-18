@@ -32,10 +32,10 @@ namespace EgenInlämning.Commands
                 return;
             }
             User user = userService.RegisterUser(username, password);
-            Console.WriteLine($"Created user '{user.Name}' with ID: {user.Id}");
+            Console.WriteLine($"Created user '{user.Username}' with ID: {user.Id}");
             
 
-            Console.WriteLine($"Created user '{user.Name}'");
+            Console.WriteLine($"Created user '{user.Username}'");
              userService.Login(username, password);
             menuService.SetMenu(new MainMenu(userService, menuService, transactionService));
         }

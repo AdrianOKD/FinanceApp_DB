@@ -2,9 +2,6 @@ using System.Data.SqlTypes;
 using EgenInlämning;
 using Npgsql;
 
-//using EgenInlämning.User;
-//När jag vill deleta, ta in transaktionerna i en lista, gå sedan igenom listan och sätt ett index på den kopplat till id, för att genom den deleta transaktionen
-
 namespace EgenInlämning.Transactions
 {
     public class TransactionService : ITransactionService
@@ -33,7 +30,7 @@ namespace EgenInlämning.Transactions
                 Date = DateTime.Now,
             };
             var sql = SqlQueries.CreateTransactionSql;
-           
+
             using (var cmd = new NpgsqlCommand(sql, this.connection))
             {
                 cmd.Parameters.AddWithValue("@id", transaction.Id);
@@ -49,23 +46,25 @@ namespace EgenInlämning.Transactions
 
             using (var updatecmd = new NpgsqlCommand(updateBalanceSql, connection))
             {
-                updatecmd.Parameters.AddWithValue("@user_Id", user.Id);
+                updatecmd.Parameters.AddWithValue("@user_id", user.Id);
                 updatecmd.Parameters.AddWithValue("@amount", amount);
 
-                Console.WriteLine($"Updating balance for user: {user.Name}");
+                Console.WriteLine($"Updating balance for user: {user.Username}");
                 Console.WriteLine($"Amount to add: {amount}");
 
                 updatecmd.ExecuteNonQuery();
-                var checkBalanceSql = "SELECT balance FROM users WHERE id = @user_Id";
+                var checkBalanceSql = "SELECT balance FROM users WHERE id = @user_id";
                 using (var checkBalanceCmd = new NpgsqlCommand(checkBalanceSql, connection))
                 {
-                    checkBalanceCmd.Parameters.AddWithValue("@user_Id", user.Id);
+                    checkBalanceCmd.Parameters.AddWithValue("@user_id", user.Id);
                     var newBalance = (decimal)checkBalanceCmd.ExecuteScalar();
                     Console.WriteLine($" Your new balance is: {newBalance}");
                 }
                 return transaction;
             }
         }
+
+      //  public Transaction RemoveTransactionCommand() { return }
 
         public void CheckBalanceCmd()
         {
@@ -74,10 +73,10 @@ namespace EgenInlämning.Transactions
             {
                 throw new ArgumentException("You are not logged in.");
             }
-            var sql = SqlQueries.BalanceSql;
+            var sql = SqlQueries.GetBalanceSql;
             using (var checkBalanceCmd = new NpgsqlCommand(sql, connection))
             {
-                checkBalanceCmd.Parameters.AddWithValue("@user_Id", user.Id);
+                checkBalanceCmd.Parameters.AddWithValue("@user_id", user.Id);
                 var newBalance = (decimal)checkBalanceCmd.ExecuteScalar();
                 Console.WriteLine($"Balance for user ID {user.Id}: {newBalance}");
             }
@@ -91,11 +90,11 @@ namespace EgenInlämning.Transactions
                 throw new ArgumentException("You are not logged in.");
             }
 
-            var sql = SqlQueries.YearSql;
+            var sql = SqlQueries.GetYearlyTransactionsSql;
 
             using (var cmd = new NpgsqlCommand(sql, this.connection))
             {
-                cmd.Parameters.AddWithValue("@user_Id", user.Id);
+                cmd.Parameters.AddWithValue("@user_id", user.Id);
                 cmd.Parameters.AddWithValue("@year", year);
                 using (var reader = cmd.ExecuteReader())
                 {
@@ -126,7 +125,7 @@ namespace EgenInlämning.Transactions
             {
                 throw new ArgumentException("You are not logged in.");
             }
-            var sql = SqlQueries.MonthSql;
+            var sql = SqlQueries.GetMonthlyTransactionsSql;
 
             using (var cmd = new NpgsqlCommand(sql, this.connection))
             {
@@ -161,7 +160,7 @@ namespace EgenInlämning.Transactions
             {
                 throw new ArgumentException("You are not logged in.");
             }
-            var sql = SqlQueries.WeekSql;
+            var sql = SqlQueries.GetWeeklyTransactionsSql;
 
             using (var cmd = new NpgsqlCommand(sql, this.connection))
             {

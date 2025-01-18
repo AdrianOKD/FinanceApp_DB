@@ -8,8 +8,8 @@ namespace EgenInlämning.Transactions
         void CheckBalanceCmd();
         List<Transaction> GetTransactionsByMonth(Guid user_id, int year, int month);
 
-        
-      
+       // public Transaction RemoveTransactionCommand() { }
+
         // Transaction GetTransactionByWeek();
     }
 }

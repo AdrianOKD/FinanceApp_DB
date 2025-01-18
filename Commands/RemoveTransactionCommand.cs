@@ -26,7 +26,7 @@ namespace EgenInlämning.Commands
             {
                 Console.WriteLine("You must be logged in to remove a transaction");
             }
-             string type = args[0];
+            string type = args[0];
         }
     }
 }

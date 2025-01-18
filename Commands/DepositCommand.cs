@@ -21,7 +21,7 @@ namespace EgenInlämning.Commands
                 return;
             }
             //add function for
-            string type = args[0];
+            //string type = args[0];
             double amount = Convert.ToDouble(args[1]);
 
             Transaction transaction = transactionService.CreateTransaction(
