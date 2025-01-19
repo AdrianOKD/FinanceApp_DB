@@ -21,12 +21,12 @@ namespace EgenInlämning
         {
             Console.Write(
                 """
-                              Transactions Menu
-                  --------------------------------------------------------
-                [1] Sort by year
-                [2] Sort by month
-                [3] Sort by week
-                [4] Sort by day
+                Transactions Menu
+                --------------------------------
+                [1] Show transactions by year
+                [2] Show transactions by month
+                [3] Show transactions by week
+                [4] Show transactions by day
                 [5] Return to main menu
 
                 Choose an option

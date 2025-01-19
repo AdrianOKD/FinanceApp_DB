@@ -17,8 +17,8 @@ namespace EgenInlämning
         {
             System.Console.Write(
                 """
-                 Welcome to the best finance app in the world of warcraft
-                 --------------------------------------------------------
+                 Welcome to the Adrians finance app
+                 ----------------------------------
                  [1] Log in
                  [2] Create Account
                  [3] Exit

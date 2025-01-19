@@ -58,7 +58,7 @@ namespace EgenInlämning
             foreach (var transaction in transactions)
             {
                 Console.WriteLine(
-                    $"{transaction.Date:yyyy-MM-dd}\t{transaction.Type, -12}\t{transaction.Amount:C}"
+                    $"{transaction.Date:yyyy-MM-dd}\t{transaction.Type, -12}\t{transaction.Amount,6:C}"
                 );
             }
         }

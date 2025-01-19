@@ -9,7 +9,7 @@ namespace EgenInlämning
         )
         {
             // csharpier-ignore-start
-            AddCommand(new WithdrawCommand(userService, menuService, transactionService ));
+            AddCommand(new ExpenseCommand(userService, menuService, transactionService ));
             AddCommand(new DepositCommand(userService, menuService, transactionService));
             AddCommand(new RemoveTransactionCommand(userService, menuService, transactionService));
             AddCommand(new ShowBalanceCommand(userService,menuService,transactionService));
@@ -21,9 +21,10 @@ namespace EgenInlämning
 
         public override void Display()
         {
+            Console.Clear();
             Console.Write(
                 """
-                  Welcome to the best finance app in the world of warcraft
+                  Main Menu
                   --------------------------------------------------------
                 [1] Deposit amount
                 [2] Withdraw amount

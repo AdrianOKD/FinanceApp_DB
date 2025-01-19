@@ -1,9 +1,9 @@
 
 namespace EgenInlämning
 {
-    public class WithdrawCommand : Command
+    public class ExpenseCommand : Command
     {
-        public WithdrawCommand(
+        public ExpenseCommand(
             IUserService userService,
             IMenuService menuService,
             ITransactionService transactionService
