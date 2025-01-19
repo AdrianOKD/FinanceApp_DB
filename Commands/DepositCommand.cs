@@ -1,4 +1,3 @@
-
 namespace EgenInlämning
 {
     public class DepositCommand : Command
@@ -18,11 +17,9 @@ namespace EgenInlämning
                 Console.WriteLine("You must be logged in to make a deposit");
                 return;
             }
-            //add function for
-            //string type = args[0];
             System.Console.WriteLine("Type amount you want to deposite.");
             string input = Console.ReadLine();
-            
+
             double amount = Convert.ToDouble(input);
 
             Transaction transaction = transactionService.CreateTransaction(
@@ -32,8 +29,6 @@ namespace EgenInlämning
             );
 
             Console.WriteLine($"Successfully deposited");
-
-
         }
     }
 }

@@ -28,7 +28,7 @@ namespace EgenInlämning
                 [3] Show transactions by week
                 [4] Show transactions by day
                 [5] Return to main menu
-
+                --------------------------------
                 Choose an option
 
                 """

@@ -22,7 +22,7 @@ namespace EgenInlämning
                  [1] Log in
                  [2] Create Account
                  [3] Exit
-
+                 ----------------------------------
                  Choose an option
 
                 """

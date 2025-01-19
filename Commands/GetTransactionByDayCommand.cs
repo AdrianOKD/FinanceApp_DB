@@ -62,7 +62,7 @@ namespace EgenInlämning
                 foreach (var transaction in transactions)
                 {
                     Console.WriteLine(
-                        $"{transaction.Date:HH:mm}\t{transaction.Type, -12}\t{transaction.Amount,6:C}"
+                        $"{transaction.Date:HH:mm}\t{transaction.Type, -12}\t{transaction.Amount, 6:C}"
                     );
                 }
             }

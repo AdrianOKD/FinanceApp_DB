@@ -45,7 +45,7 @@ namespace EgenInlämning
                 month
             );
 
-             transactions = transactions.Where(t => t.Type == transactionType).ToList();
+            transactions = transactions.Where(t => t.Type == transactionType).ToList();
 
             if (!transactions.Any())
             {
@@ -60,7 +60,7 @@ namespace EgenInlämning
             foreach (var transaction in transactions)
             {
                 Console.WriteLine(
-                    $"{transaction.Date:yyyy-MM-dd}\t{transaction.Type, -12}\t{transaction.Amount,6:C}"
+                    $"{transaction.Date:yyyy-MM-dd}\t{transaction.Type, -12}\t{transaction.Amount, 6:C}"
                 );
             }
         }

@@ -1,4 +1,3 @@
-
 namespace EgenInlämning
 {
     public abstract class Command
