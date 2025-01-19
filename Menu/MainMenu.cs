@@ -14,6 +14,7 @@ namespace EgenInlämning
             AddCommand(new RemoveTransactionCommand(userService, menuService, transactionService));
             AddCommand(new ShowBalanceCommand(userService,menuService,transactionService));
             AddCommand(new LogoutCommand(userService, menuService, transactionService) );
+            AddCommand(new TransactionsMenuCommand(userService, menuService, transactionService) );
 
             //csharp-ignore-end
         }

@@ -98,7 +98,7 @@ namespace EgenInlämning
             {
                 checkBalanceCmd.Parameters.AddWithValue("@user_id", user.Id);
                 var newBalance = (decimal)checkBalanceCmd.ExecuteScalar();
-                Console.WriteLine($"Balance for user ID {user.Id}: {newBalance}");
+                Console.WriteLine($"Balance for user ID {user.Username}: {newBalance}");
             }
         }
 

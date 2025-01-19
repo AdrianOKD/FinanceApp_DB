@@ -8,32 +8,26 @@ namespace EgenInlämning
             ITransactionService transactionService
         )
         {
-            AddCommand(
-                new GetTransactionsByYearCommand(userService, menuService, transactionService)
-            );
-            AddCommand(
-                new GetTransactionsByMonthCommand(userService, menuService, transactionService)
-            );
-            AddCommand(
-                new GetTransactionsByWeekCommand(userService, menuService, transactionService)
-            );
-            AddCommand(
-                new GetTransactionsByDayCommand(userService, menuService, transactionService)
-            );
+            // csharpier-ignore-start
+            AddCommand(new GetTransactionsByYearCommand(userService, menuService, transactionService));
+            AddCommand(new GetTransactionsByMonthCommand(userService, menuService, transactionService));
+            AddCommand(new GetTransactionsByWeekCommand(userService, menuService, transactionService));
+            AddCommand(new GetTransactionsByDayCommand(userService, menuService, transactionService));
+            AddCommand(new MainMenuCommand(userService, menuService, transactionService));
+            //csharp-ignore-end
         }
 
         public override void Display()
         {
             Console.Write(
                 """
-                  Welcome to the best finance app in the world of warcraft
+                              Transactions Menu
                   --------------------------------------------------------
-                [3] Sort by year
-                [4] Sort by month
-                [5] Sort by week
-                [6] Sort by year
-                [6] Sort by year
-                [3] Exit
+                [1] Sort by year
+                [2] Sort by month
+                [3] Sort by week
+                [4] Sort by day
+                [5] Return to main menu
 
                 Choose an option
 

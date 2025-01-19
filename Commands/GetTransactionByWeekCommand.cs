@@ -23,6 +23,16 @@ namespace EgenInlämning
                 Console.WriteLine("You must be logged in to view transactions.");
                 return;
             }
+            Console.WriteLine("View: [1] Deposits or [2] Expenses");
+            string choice = Console.ReadLine();
+
+            if (choice != "1" && choice != "2")
+            {
+                Console.WriteLine("Invalid choice. Please select 1 or 2.");
+                return;
+            }
+
+            string transactionType = (choice == "1") ? "deposit" : "expense";
             System.Console.WriteLine("Enter year (YYYY):");
             string yearInput = Console.ReadLine();
             System.Console.WriteLine("What week?");
@@ -36,6 +46,8 @@ namespace EgenInlämning
                 year,
                 week
             );
+
+             transactions = transactions.Where(t => t.Type == transactionType).ToList();
 
             if (!transactions.Any())
             {
