@@ -84,7 +84,18 @@ namespace EgenInlämning
             }
         }
 
-        //  public Transaction RemoveTransactionCommand() { return }
+        public bool RemoveTransaction(Guid transactionId, Guid userId)
+        {
+            var sql = SqlQueries.RemoveTransactionSql;
+            using (var cmd = new NpgsqlCommand(sql, this.connection))
+            {
+                cmd.Parameters.AddWithValue("@transaction_id", transactionId);
+                cmd.Parameters.AddWithValue("@user_id", userId);
+
+                int rowsAffected = cmd.ExecuteNonQuery();
+                return rowsAffected > 0;
+            }
+        }
 
         public void CheckBalanceCmd()
         {

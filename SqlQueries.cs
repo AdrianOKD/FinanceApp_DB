@@ -120,6 +120,11 @@ public class SqlQueries
         @"DELETE FROM users
         WHERE user_id = @user_id";
 
+    public static string RemoveTransactionSql =>
+        @"DELETE FROM transactions 
+    WHERE transaction_id = @transaction_id 
+    AND user_id = @user_id";
+
     public static string CheckUserNameSql =>
         @"SELECT COUNT(*) FROM users WHERE username = @username";
 }

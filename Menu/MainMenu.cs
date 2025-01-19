@@ -11,7 +11,6 @@ namespace EgenInlämning
             // csharpier-ignore-start
             AddCommand(new ExpenseCommand(userService, menuService, transactionService ));
             AddCommand(new DepositCommand(userService, menuService, transactionService));
-            AddCommand(new RemoveTransactionCommand(userService, menuService, transactionService));
             AddCommand(new ShowBalanceCommand(userService,menuService,transactionService));
             AddCommand(new LogoutCommand(userService, menuService, transactionService) );
             AddCommand(new TransactionsMenuCommand(userService, menuService, transactionService) );

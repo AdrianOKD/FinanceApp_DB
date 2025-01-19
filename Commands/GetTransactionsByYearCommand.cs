@@ -33,7 +33,7 @@ namespace EgenInlämning
             }
 
             string transactionType = (choice == "1") ? "deposit" : "expense";
-            
+
             System.Console.WriteLine("Enter year (YYYY):");
             int year = Convert.ToInt32(Console.ReadLine());
             try
@@ -55,14 +55,56 @@ namespace EgenInlämning
                 Console.WriteLine("Date\t\tType\t\tAmount");
                 Console.WriteLine("----------------------------------------");
 
-                foreach (var transaction in transactions)
+                for (int i = 0; i < transactions.Count; i++)
                 {
+                    var transaction = transactions[i];
                     Console.WriteLine(
-                        $"{transaction.Date:yyyy-MM-dd}\t{transaction.Type, -12}\t{transaction.Amount, 6:C}"
+                        $"{i + 1}\t{transaction.Date:yyyy-MM-dd}\t{transaction.Type, -12}\t{transaction.Amount, 6:C}"
                     );
                 }
+                Console.WriteLine("\nWould you like to remove a transaction? (Y/N)");
+                if (Console.ReadLine().Trim().ToUpper() == "Y")
+                {
+                    Console.Write(
+                        "Enter the number of the transaction to remove (or 0 to cancel): "
+                    );
+                    if (int.TryParse(Console.ReadLine(), out int index))
+                    {
+                        if (index == 0)
+                        {
+                            Console.WriteLine("Operation cancelled");
+                            return;
+                        }
+
+                        index--;
+
+                        if (index >= 0 && index < transactions.Count)
+                        {
+                            var transactionToRemove = transactions[index];
+                            try
+                            {
+                                bool removed = transactionService.RemoveTransaction(
+                                    transactionToRemove.Id,
+                                    currentUser.Id
+                                );
+                                if (removed)
+                                {
+                                    Console.WriteLine("Transaction removed successfully");
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Failed to remove transaction");
+                                }
+                            }
+                            catch
+                            {
+                                Console.WriteLine("Unable to remove transaction");
+                            }
+                        }
+                    }
+                }
             }
-            catch (ArgumentOutOfRangeException)
+            catch
             {
                 Console.WriteLine("Invalid date. Please enter a valid date.");
             }

@@ -8,7 +8,7 @@ namespace EgenInlämning
         void CheckBalanceCmd();
         List<Transaction> GetTransactionsByMonth(Guid user_id, int year, int month);
 
-        // public Transaction RemoveTransactionCommand() { }
+        public bool RemoveTransaction(Guid transactionId, Guid userId);
         List<Transaction> GetTransactionsByDay(Guid user_id, int year, int month, int day);
         List<Transaction> GetTransactionsByWeek(Guid user_id, int year, int week);
     }
