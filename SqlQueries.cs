@@ -122,8 +122,13 @@ public class SqlQueries
 
     public static string RemoveTransactionSql =>
         @"DELETE FROM transactions 
-    WHERE transaction_id = @transaction_id 
-    AND user_id = @user_id";
+        WHERE transaction_id = @transaction_id 
+        AND user_id = @user_id";
+
+    public static string GetTransactionsSql =>
+        @"SELECT amount, type FROM transactions 
+        WHERE transaction_id = @transaction_id 
+        AND user_id = @user_id";
 
     public static string CheckUserNameSql =>
         @"SELECT COUNT(*) FROM users WHERE username = @username";

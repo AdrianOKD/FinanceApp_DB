@@ -27,12 +27,18 @@ namespace EgenInlämning
                 Type = type,
                 Date = DateTime.Now,
             };
-            var sql = SqlQueries.CreateTransactionSql;
+            var createTransactionSql = SqlQueries.CreateTransactionSql;
             using (var dbTransaction = connection.BeginTransaction())
             {
                 try
                 {
-                    using (var cmd = new NpgsqlCommand(sql, this.connection, dbTransaction))
+                    using (
+                        var cmd = new NpgsqlCommand(
+                            createTransactionSql,
+                            this.connection,
+                            dbTransaction
+                        )
+                    )
                     {
                         cmd.Parameters.AddWithValue("@transaction_id", transaction.Id);
                         cmd.Parameters.AddWithValue("@user_id", user.Id);
@@ -86,14 +92,72 @@ namespace EgenInlämning
 
         public bool RemoveTransaction(Guid transactionId, Guid userId)
         {
-            var sql = SqlQueries.RemoveTransactionSql;
-            using (var cmd = new NpgsqlCommand(sql, this.connection))
-            {
-                cmd.Parameters.AddWithValue("@transaction_id", transactionId);
-                cmd.Parameters.AddWithValue("@user_id", userId);
+            var getTransactionsSql = SqlQueries.GetTransactionsSql;
 
-                int rowsAffected = cmd.ExecuteNonQuery();
-                return rowsAffected > 0;
+            using var dbTransaction = connection.BeginTransaction();
+            try
+            {
+                using (
+                    var getCmd = new NpgsqlCommand(getTransactionsSql, connection, dbTransaction)
+                )
+                {
+                    getCmd.Parameters.AddWithValue("@transaction_id", transactionId);
+                    getCmd.Parameters.AddWithValue("@user_id", userId);
+
+                    using var reader = getCmd.ExecuteReader();
+                    if (!reader.Read())
+                    {
+                        dbTransaction.Rollback();
+                        return false;
+                    }
+
+                    var amount = reader.GetDouble(0);
+                    var type = reader.GetString(1);
+                    var adjustmentAmount = type == "deposit" ? -amount : amount;
+                    reader.Close();
+
+                    var updateBalanceSql = SqlQueries.UpdateBalanceSql;
+                    using (
+                        var updateCmd = new NpgsqlCommand(
+                            updateBalanceSql,
+                            connection,
+                            dbTransaction
+                        )
+                    )
+                    {
+                        updateCmd.Parameters.AddWithValue("@user_id", userId);
+                        updateCmd.Parameters.AddWithValue("@amount", adjustmentAmount);
+                        updateCmd.ExecuteNonQuery();
+                    }
+
+                    var removeTransactionSql = SqlQueries.RemoveTransactionSql;
+                    using (
+                        var removeCmd = new NpgsqlCommand(
+                            removeTransactionSql,
+                            connection,
+                            dbTransaction
+                        )
+                    )
+                    {
+                        removeCmd.Parameters.AddWithValue("@transaction_id", transactionId);
+                        removeCmd.Parameters.AddWithValue("@user_id", userId);
+
+                        int rowsAffected = removeCmd.ExecuteNonQuery();
+                        if (rowsAffected <= 0)
+                        {
+                            dbTransaction.Rollback();
+                            return false;
+                        }
+                    }
+
+                    dbTransaction.Commit();
+                    return true;
+                }
+            }
+            catch (Exception)
+            {
+                dbTransaction.Rollback();
+                return false;
             }
         }
 
@@ -156,9 +220,9 @@ namespace EgenInlämning
             {
                 throw new ArgumentException("You are not logged in.");
             }
-            var sql = SqlQueries.GetMonthlyTransactionsSql;
+            var getMonthlyTransactionsSql = SqlQueries.GetMonthlyTransactionsSql;
 
-            using (var cmd = new NpgsqlCommand(sql, this.connection))
+            using (var cmd = new NpgsqlCommand(getMonthlyTransactionsSql, this.connection))
             {
                 cmd.Parameters.AddWithValue("@user_id", user.Id);
                 cmd.Parameters.AddWithValue("@year", year);
@@ -192,9 +256,9 @@ namespace EgenInlämning
             {
                 throw new ArgumentException("You are not logged in.");
             }
-            var sql = SqlQueries.GetWeeklyTransactionsSql;
+            var getWeeklyTransactionsSql = SqlQueries.GetWeeklyTransactionsSql;
 
-            using (var cmd = new NpgsqlCommand(sql, this.connection))
+            using (var cmd = new NpgsqlCommand(getWeeklyTransactionsSql, this.connection))
             {
                 cmd.Parameters.AddWithValue("@user_id", user.Id);
                 cmd.Parameters.AddWithValue("@year", year);
@@ -229,9 +293,9 @@ namespace EgenInlämning
                 throw new ArgumentException("You are not logged in.");
             }
 
-            var sql = SqlQueries.GetDailyTransactionsSql;
+            var getDailyTransactionsSql = SqlQueries.GetDailyTransactionsSql;
 
-            using (var cmd = new NpgsqlCommand(sql, this.connection))
+            using (var cmd = new NpgsqlCommand(getDailyTransactionsSql, this.connection))
             {
                 cmd.Parameters.AddWithValue("@user_id", user.Id);
                 cmd.Parameters.AddWithValue("@year", year);
