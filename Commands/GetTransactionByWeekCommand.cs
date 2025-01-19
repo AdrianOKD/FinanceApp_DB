@@ -8,7 +8,7 @@ namespace EgenInlämning
             ITransactionService transactionService
         )
             : base(
-                "5",
+                "3",
                 "Shows transactions for a certain week",
                 userService,
                 menuService,
@@ -31,18 +31,19 @@ namespace EgenInlämning
             int year = Convert.ToInt32(yearInput);
             int week = Convert.ToInt32(weekInput);
 
-            List<Transaction> transactions = transactionService.GetTransactionsByYear(
+            List<Transaction> transactions = transactionService.GetTransactionsByWeek(
                 currentUser.Id,
-                year
+                year,
+                week
             );
 
             if (!transactions.Any())
             {
-                Console.WriteLine($"No transactions found for {year} {week}");
+                Console.WriteLine($"No transactions found for Year: {year} Week: {week}");
                 return;
             }
 
-            Console.WriteLine($"\nTransactions for {year}:");
+            Console.WriteLine($"\nTransactions for {year} {week}:");
             Console.WriteLine("Date\t\tType\t\tAmount");
             Console.WriteLine("----------------------------------------");
 

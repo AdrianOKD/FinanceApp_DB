@@ -13,11 +13,8 @@ namespace EgenInlämning
             AddCommand(new DepositCommand(userService, menuService, transactionService));
             AddCommand(new RemoveTransactionCommand(userService, menuService, transactionService));
             AddCommand(new ShowBalanceCommand(userService,menuService,transactionService));
-            AddCommand(new GetTransactionsByYearCommand(userService, menuService, transactionService));
-            AddCommand(new GetTransactionsByMonthCommand(userService, menuService, transactionService));
-            AddCommand(new GetTransactionsByWeekCommand(userService, menuService, transactionService) );
-             AddCommand(new GetTransactionsByDayCommand(userService, menuService, transactionService) );
-             AddCommand(new GetTransactionsByDayCommand(userService, menuService, transactionService) );
+            AddCommand(new LogoutCommand(userService, menuService, transactionService) );
+
             //csharp-ignore-end
         }
 
@@ -29,12 +26,10 @@ namespace EgenInlämning
                   --------------------------------------------------------
                 [1] Deposit amount
                 [2] Withdraw amount
-                [3] Sort by year
-                [4] Sort by month
-                [5] Sort by week
-                [6] Sort by year
-                [6] Sort by year
-                [3] Exit
+                [3] Check balance
+                [4] Show deposits and expenses
+                [5] Logout
+                [6] Exit
 
                 Choose an option
 

@@ -22,9 +22,11 @@ class Program
         IMenuService menuService = new SimpleMenuService();
         ITransactionService transactionService = new TransactionService(userService, connection);
         Menu initialMenu = new LoginMenu(userService, menuService, transactionService);
+        Console.Clear();
         menuService.SetMenu(initialMenu);
 
         MainMenu mainMenu = new MainMenu(userService, menuService, transactionService);
+        
 
         while (true)
         {

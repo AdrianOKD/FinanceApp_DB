@@ -46,7 +46,9 @@ public class SqlQueries
         SELECT transaction_id, amount, type, created_at 
         FROM transactions 
         WHERE user_id = @user_id 
-        AND DATE(created_at) = @date
+        AND EXTRACT(YEAR FROM created_at) = @year
+        AND EXTRACT(MONTH FROM created_at) = @month
+        AND EXTRACT(DAY FROM created_at) = @day
         ORDER BY created_at";
 
     public static string GetWeeklyTransactionsSql =>

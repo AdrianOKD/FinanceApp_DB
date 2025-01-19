@@ -12,7 +12,7 @@ namespace EgenInlämning
             IMenuService menuService,
             ITransactionService transactionService
         )
-            : base("9", "Logout of account", userService, menuService, transactionService) { }
+            : base("5", "Log out of account", userService, menuService, transactionService) { }
 
         public override void Execute(string[] args)
         {

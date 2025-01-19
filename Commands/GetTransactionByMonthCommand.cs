@@ -8,7 +8,7 @@ namespace EgenInlämning
             ITransactionService transactionService
         )
             : base(
-                "4",
+                "2",
                 "Sort transactions for certain year and month",
                 userService,
                 menuService,
@@ -29,7 +29,6 @@ namespace EgenInlämning
             System.Console.WriteLine("Enter month (1-12):");
             string input2 = Console.ReadLine();
             int month = Convert.ToInt32(input2);
-
             List<Transaction> transactions = transactionService.GetTransactionsByMonth(
                 currentUser.Id,
                 year,
@@ -38,11 +37,11 @@ namespace EgenInlämning
 
             if (!transactions.Any())
             {
-                Console.WriteLine($"No transactions found for {year}, {month}");
+                Console.WriteLine($"No transactions found for Year: {year} Month: {month}");
                 return;
             }
 
-            Console.WriteLine($"\nTransactions for {year},{month}:");
+            Console.WriteLine($"\nTransactions for Year: {year} Month: {month}:");
             Console.WriteLine("Date\t\tType\t\tAmount");
             Console.WriteLine("----------------------------------------");
 

@@ -225,7 +225,7 @@ namespace EgenInlämning
                 cmd.Parameters.AddWithValue("@user_id", user.Id);
                 cmd.Parameters.AddWithValue("@year", year);
                 cmd.Parameters.AddWithValue("@month", month);
-                cmd.Parameters.AddWithValue("@month", month);
+                cmd.Parameters.AddWithValue("@day", day);
 
                 using (var reader = cmd.ExecuteReader())
                 {

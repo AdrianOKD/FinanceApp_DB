@@ -7,7 +7,7 @@ namespace EgenInlämning
             IMenuService menuService,
             ITransactionService transactionService
         )
-            : base("5", "description", userService, menuService, transactionService) { }
+            : base("4", "description", userService, menuService, transactionService) { }
 
         public override void Execute(string[] args)
         {
@@ -19,15 +19,13 @@ namespace EgenInlämning
             }
 
             System.Console.WriteLine("Enter year (YYYY):");
-            string yearInput = Console.ReadLine();
-            System.Console.WriteLine("Enter month (1-12):");
-            string monthInput = Console.ReadLine();
-            System.Console.WriteLine("Enter day (1-31):");
-            string dayInput = Console.ReadLine();
+            int year = Convert.ToInt32(Console.ReadLine);
 
-            int year = Convert.ToInt32(yearInput);
-            int month = Convert.ToInt32(monthInput);
-            int day = Convert.ToInt32(dayInput);
+            System.Console.WriteLine("Enter month (1-12):");
+            int month = Convert.ToInt32(Console.ReadLine);
+
+            System.Console.WriteLine("Enter day (1-31):");
+            int day = Convert.ToInt32(Console.ReadLine);
 
             try
             {

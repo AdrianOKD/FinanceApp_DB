@@ -10,7 +10,7 @@ namespace EgenInlämning
             ITransactionService transactionService
         )
             : base(
-                "check-balance",
+                "3",
                 "Checks users balance",
                 userService,
                 menuService,

@@ -8,7 +8,7 @@ namespace EgenInlämning
             ITransactionService transactionService
         )
             : base(
-                "3",
+                "1",
                 "Show transaction for certain year",
                 userService,
                 menuService,
@@ -35,11 +35,11 @@ namespace EgenInlämning
 
             if (!transactions.Any())
             {
-                Console.WriteLine($"No transactions found for {year}");
+                Console.WriteLine($"No transactions found for Year: {year}");
                 return;
             }
 
-            Console.WriteLine($"\nTransactions for {year}:");
+            Console.WriteLine($"\nTransactions for Year: {year}");
             Console.WriteLine("Date\t\tType\t\tAmount");
             Console.WriteLine("----------------------------------------");
 
