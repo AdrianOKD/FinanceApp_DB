@@ -55,14 +55,63 @@ namespace EgenInlämning
                     return;
                 }
 
-                Console.WriteLine($"\nTransactions for {specificDate:yyyy-MM-dd}:");
-                Console.WriteLine("Time\t\tType\t\tAmount");
-                Console.WriteLine("----------------------------------------");
+                Console.WriteLine($"\nTransactions for Year: {year}");
+                Console.WriteLine("Index\tDate\t\tType\t\tAmount");
+                Console.WriteLine("-----------------------------------------------");
 
-                foreach (var transaction in transactions)
+                for (int i = 0; i < transactions.Count; i++)
                 {
+                    var transaction = transactions[i];
                     Console.WriteLine(
-                        $"{transaction.Date:HH:mm}\t{transaction.Type, -12}\t{transaction.Amount, 6:C}"
+                        $"{i + 1, -2}\t{transaction.Date:yyyy-MM-dd}\t{transaction.Type, -14}\t{transaction.Amount, 8:C}"
+                    );
+                }
+                Console.WriteLine("\nWould you like to remove a transaction? (Y/N)");
+                if (Console.ReadLine().Trim().ToUpper() == "Y")
+                {
+                    Console.Write(
+                        "Enter the number of the transaction to remove (or 0 to cancel): "
+                    );
+                    if (int.TryParse(Console.ReadLine(), out int index))
+                    {
+                        if (index == 0)
+                        {
+                            Console.WriteLine("Cancelled removal");
+                            return;
+                        }
+
+                        index--;
+
+                        if (index >= 0 && index < transactions.Count)
+                        {
+                            var transactionToRemove = transactions[index];
+                            try
+                            {
+                                bool removed = transactionService.RemoveTransaction(
+                                    transactionToRemove.Id,
+                                    currentUser.Id
+                                );
+                                if (removed)
+                                {
+                                    Console.WriteLine("Transaction removed successfully");
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Failed to remove transaction");
+                                }
+                            }
+                            catch
+                            {
+                                Console.WriteLine("Unable to remove transaction");
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Returning to transactions menu...");
+                    menuService.SetMenu(
+                        new TransactionsMenu(userService, menuService, transactionService)
                     );
                 }
             }

@@ -1,3 +1,5 @@
+using System.Net;
+
 namespace EgenInlämning
 {
     public class GetTransactionsByYearCommand : Command
@@ -52,14 +54,14 @@ namespace EgenInlämning
                 }
 
                 Console.WriteLine($"\nTransactions for Year: {year}");
-                Console.WriteLine("Date\t\tType\t\tAmount");
-                Console.WriteLine("----------------------------------------");
+                Console.WriteLine("Index\tDate\t\tType\t\tAmount");
+                Console.WriteLine("-----------------------------------------------");
 
                 for (int i = 0; i < transactions.Count; i++)
                 {
                     var transaction = transactions[i];
                     Console.WriteLine(
-                        $"{i + 1}\t{transaction.Date:yyyy-MM-dd}\t{transaction.Type, -12}\t{transaction.Amount, 6:C}"
+                        $"{i + 1, -2}\t{transaction.Date:yyyy-MM-dd}\t{transaction.Type, -14}\t{transaction.Amount, 8:C}"
                     );
                 }
                 Console.WriteLine("\nWould you like to remove a transaction? (Y/N)");
@@ -72,7 +74,7 @@ namespace EgenInlämning
                     {
                         if (index == 0)
                         {
-                            Console.WriteLine("Operation cancelled");
+                            Console.WriteLine("Cancelled removal");
                             return;
                         }
 
@@ -102,6 +104,13 @@ namespace EgenInlämning
                             }
                         }
                     }
+                }
+                else
+                {
+                    Console.WriteLine("Returning to transactions menu...");
+                    menuService.SetMenu(
+                        new TransactionsMenu(userService, menuService, transactionService)
+                    );
                 }
             }
             catch

@@ -1,4 +1,3 @@
-
 namespace EgenInlämning
 {
     public class LoginMenu : Menu
