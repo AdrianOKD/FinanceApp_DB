@@ -1,4 +1,3 @@
-
 namespace EgenInlämning
 {
     public class ExpenseCommand : Command
@@ -15,12 +14,17 @@ namespace EgenInlämning
             var currentUser = userService.GetLoggedInUser();
             if (currentUser == null)
             {
-                Console.WriteLine("You must be logged in to make add an expense");
+                Console.WriteLine("You must be logged in to add an expense");
                 return;
             }
 
             System.Console.WriteLine("Type amount you want add as an expense.");
-            string input = Console.ReadLine();
+            string? input = Console.ReadLine();
+            if (string.IsNullOrEmpty(input))
+            {
+                System.Console.WriteLine("Please enter an amount");
+                return;
+            }
             double amount = -Convert.ToDouble(input);
 
             Transaction transaction = transactionService.CreateTransaction(
@@ -29,7 +33,7 @@ namespace EgenInlämning
                 type: "expense"
             );
 
-            System.Console.WriteLine($"You added expense of:  {amount}");
+            System.Console.WriteLine($"You added an expense of:  {amount}");
         }
     }
 }

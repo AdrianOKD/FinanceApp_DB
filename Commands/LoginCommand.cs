@@ -49,15 +49,10 @@ namespace EgenInlämning
                     Console.WriteLine("Wrong username or password.");
                     continue;
                 }
-                if (verifyLogin != null)
-                {
-                    Console.WriteLine("Login state verified successfully");
-                }
                 else
                 {
                     Console.WriteLine("Warning: Logged in but session verification failed");
                 }
-                Console.WriteLine($"Successfully logged in as {user.Username} (ID: {user.Id})");
                 Console.WriteLine("You successfully logged in.");
                 Console.ReadKey();
                 menuService.SetMenu(new MainMenu(userService, menuService, transactionService));

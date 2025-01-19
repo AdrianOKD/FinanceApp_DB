@@ -18,7 +18,7 @@ namespace EgenInlämning
                 return;
             }
             Console.WriteLine("View: [1] Deposits or [2] Expenses");
-            string choice = Console.ReadLine();
+            string? choice = Console.ReadLine();
 
             if (choice != "1" && choice != "2")
             {
@@ -67,7 +67,7 @@ namespace EgenInlämning
                     );
                 }
                 Console.WriteLine("\nWould you like to remove a transaction? (Y/N)");
-                if (Console.ReadLine().Trim().ToUpper() == "Y")
+                if (Console.ReadLine()!.Trim().ToUpper() == "Y")
                 {
                     Console.Write(
                         "Enter the number of the transaction to remove (or 0 to cancel): "
@@ -111,7 +111,7 @@ namespace EgenInlämning
                 {
                     Console.WriteLine("Returning to transactions menu...");
                     menuService.SetMenu(
-                        new TransactionsMenu(userService, menuService, transactionService)
+                    new TransactionsMenu(userService, menuService, transactionService)
                     );
                 }
             }

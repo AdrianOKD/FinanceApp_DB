@@ -24,7 +24,12 @@ namespace EgenInlämning
                 return;
             }
             Console.WriteLine("View: [1] Deposits or [2] Expenses");
-            string choice = Console.ReadLine();
+            string? choice = Console.ReadLine();
+            if (string.IsNullOrEmpty(choice))
+            {
+                System.Console.WriteLine("Please enter a valid choice");
+                return;
+            }
 
             if (choice != "1" && choice != "2")
             {
@@ -54,7 +59,7 @@ namespace EgenInlämning
                     return;
                 }
 
-                   Console.WriteLine($"\nTransactions for Year: {year}");
+                Console.WriteLine($"\nTransactions for Year: {year}");
                 Console.WriteLine("Index\tDate\t\tType\t\tAmount");
                 Console.WriteLine("-----------------------------------------------");
 
@@ -66,7 +71,7 @@ namespace EgenInlämning
                     );
                 }
                 Console.WriteLine("\nWould you like to remove a transaction? (Y/N)");
-                if (Console.ReadLine().Trim().ToUpper() == "Y")
+                if (Console.ReadLine()!.Trim().ToUpper() == "Y")
                 {
                     Console.Write(
                         "Enter the number of the transaction to remove (or 0 to cancel): "

@@ -14,14 +14,14 @@ namespace EgenInlämning
         {
             Console.WriteLine("Starting registration process...");
             System.Console.WriteLine("Enter Username");
-            string username = Console.ReadLine();
+            string? username = Console.ReadLine();
             if (string.IsNullOrEmpty(username))
             {
                 System.Console.WriteLine("username cant be empty");
                 return;
             }
             System.Console.WriteLine("Enter Password");
-            string password = Console.ReadLine();
+            string? password = Console.ReadLine();
 
             if (string.IsNullOrEmpty(password))
             {
@@ -29,7 +29,7 @@ namespace EgenInlämning
                 return;
             }
             string hashedPassword = BCrypt.Net.BCrypt.HashPassword(password);
-            User user = userService.RegisterUser(username, hashedPassword);
+            User? user = userService.RegisterUser(username, hashedPassword);
             if (user == null)
             {
                 return;
