@@ -33,33 +33,38 @@ namespace EgenInlämning
             }
 
             string transactionType = (choice == "1") ? "deposit" : "expense";
+            
             System.Console.WriteLine("Enter year (YYYY):");
-            string yearInput = Console.ReadLine();
-
-            int year = Convert.ToInt32(yearInput);
-
-            List<Transaction> transactions = transactionService.GetTransactionsByYear(
-                currentUser.Id,
-                year
-            );
-
-            transactions = transactions.Where(t => t.Type == transactionType).ToList();
-
-            if (!transactions.Any())
+            int year = Convert.ToInt32(Console.ReadLine());
+            try
             {
-                Console.WriteLine($"No transactions found for Year: {year}");
-                return;
-            }
-
-            Console.WriteLine($"\nTransactions for Year: {year}");
-            Console.WriteLine("Date\t\tType\t\tAmount");
-            Console.WriteLine("----------------------------------------");
-
-            foreach (var transaction in transactions)
-            {
-                Console.WriteLine(
-                    $"{transaction.Date:yyyy-MM-dd}\t{transaction.Type, -12}\t{transaction.Amount, 6:C}"
+                List<Transaction> transactions = transactionService.GetTransactionsByYear(
+                    currentUser.Id,
+                    year
                 );
+
+                transactions = transactions.Where(t => t.Type == transactionType).ToList();
+
+                if (!transactions.Any())
+                {
+                    Console.WriteLine($"No transactions found for Year: {year}");
+                    return;
+                }
+
+                Console.WriteLine($"\nTransactions for Year: {year}");
+                Console.WriteLine("Date\t\tType\t\tAmount");
+                Console.WriteLine("----------------------------------------");
+
+                foreach (var transaction in transactions)
+                {
+                    Console.WriteLine(
+                        $"{transaction.Date:yyyy-MM-dd}\t{transaction.Type, -12}\t{transaction.Amount, 6:C}"
+                    );
+                }
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                Console.WriteLine("Invalid date. Please enter a valid date.");
             }
         }
     }
